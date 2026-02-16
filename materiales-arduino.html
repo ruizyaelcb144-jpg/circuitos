@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiales de Arduino</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section h2 {
+            font-size: 3rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: #f0f0f0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Component Cards */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .component-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .component-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .component-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .component-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .component-content {
+            padding: 2rem;
+        }
+
+        .component-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .component-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .component-card h3 {
+            font-size: 1.4rem;
+            color: #333;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .component-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .component-specs {
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .component-specs h4 {
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-bottom: 0.7rem;
+            font-weight: 600;
+        }
+
+        .component-specs ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .component-specs li {
+            color: #666;
+            padding: 0.3rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .component-specs li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Category Section */
+        .category-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-section h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .category-section p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .info-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 87, 34, 0.1));
+            border-left: 4px solid #ff9800;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .warning-box strong {
+            color: #ff9800;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Shopping List */
+        .shopping-list {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .shopping-list h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .kit-option {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .kit-option:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .kit-option h4 {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .kit-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .kit-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-section h2 {
+                font-size: 2rem;
+            }
+
+            .components-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-section {
+                padding: 2rem;
+            }
+
+            .shopping-list {
+                padding: 2rem;
+            }
+
+            .kit-items {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Tags */
+        .component-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particle" style="left: 15%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 35%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 55%; animation-delay: 8s;"></div>
+    <div class="particle" style="left: 75%; animation-delay: 12s;"></div>
+    <div class="particle" style="left: 85%; animation-delay: 2s;"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🔌 Materiales de Arduino</h1>
+            <a href="portafolio-arduino.html" class="back-button">
+                ← Volver al Portafolio
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h2>Componentes y Materiales</h2>
+            <p>Descubre los elementos esenciales para crear increíbles proyectos con Arduino</p>
+        </section>
+
+        <!-- Arduino Boards Section -->
+        <section class="category-section">
+            <h3>Placas Arduino</h3>
+            <p>Existen diferentes modelos de placas Arduino, cada una diseñada para necesidades específicas:</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Modelo</th>
+                        <th>Microcontrolador</th>
+                        <th>Pines Digitales</th>
+                        <th>Pines Analógicos</th>
+                        <th>Uso Recomendado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Arduino UNO</strong></td>
+                        <td>ATmega328P</td>
+                        <td>14 (6 PWM)</td>
+                        <td>6</td>
+                        <td>Ideal para principiantes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arduino Nano</strong></td>
+                        <td>ATmega328P</td>
+                        <td>14 (6 PWM)</td>
+                        <td>8</td>
+                        <td>Proyectos compactos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arduino Mega</strong></td>
+                        <td>ATmega2560</td>
+                        <td>54 (15 PWM)</td>
+                        <td>16</td>
+                        <td>Proyectos complejos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arduino Leonardo</strong></td>
+                        <td>ATmega32u4</td>
+                        <td>20 (7 PWM)</td>
+                        <td>12</td>
+                        <td>Emulación USB</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>💡 Recomendación:</strong>
+                Para comenzar, el Arduino UNO es la mejor opción. Es el más utilizado, tiene abundante documentación y ejemplos, además de ser compatible con la mayoría de shields y sensores.
+            </div>
+        </section>
+
+        <!-- Essential Components -->
+        <section class="category-section">
+            <h3>Componentes Esenciales</h3>
+            <p>Estos son los componentes básicos que todo maker de Arduino debería tener:</p>
+        </section>
+
+        <div class="components-grid">
+            <!-- Resistencias -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="Resistencias" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">⚡</div>
+                        <h3>Resistencias</h3>
+                    </div>
+                    <p class="component-description">
+                        Limitan el flujo de corriente en un circuito. Esenciales para proteger LEDs y otros componentes sensibles.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Valores comunes: 220Ω, 330Ω, 1kΩ, 10kΩ</li>
+                            <li>Potencia: 1/4W o 1/2W</li>
+                            <li>Tolerancia: ±5% (dorada)</li>
+                            <li>Identificación por código de colores</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Pasivo</span>
+                        <span class="tag">Básico</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEDs -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-d8ce80d52271?w=800&q=80" alt="LEDs" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">💡</div>
+                        <h3>LEDs</h3>
+                    </div>
+                    <p class="component-description">
+                        Diodos emisores de luz, perfectos para indicadores visuales y proyectos de iluminación.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Voltaje: 1.8V - 3.3V típico</li>
+                            <li>Corriente: 20mA máximo</li>
+                            <li>Colores: Rojo, verde, azul, amarillo, RGB</li>
+                            <li>Polaridad: Ánodo (+) y Cátodo (-)</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Salida</span>
+                        <span class="tag">Visual</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Protoboard -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="Protoboard" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔲</div>
+                        <h3>Protoboard (Breadboard)</h3>
+                    </div>
+                    <p class="component-description">
+                        Placa de pruebas que permite crear circuitos sin soldadura, ideal para prototipos y experimentos.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Características:</h4>
+                        <ul>
+                            <li>830 puntos de conexión (estándar)</li>
+                            <li>Conexiones internas horizontales</li>
+                            <li>Rieles de alimentación verticales</li>
+                            <li>Reutilizable infinitas veces</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Herramienta</span>
+                        <span class="tag">Esencial</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cables Jumper -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=800&q=80" alt="Cables" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔌</div>
+                        <h3>Cables Jumper</h3>
+                    </div>
+                    <p class="component-description">
+                        Cables de conexión para interconectar componentes en la protoboard y con Arduino.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Tipos:</h4>
+                        <ul>
+                            <li>Macho-Macho: Protoboard a protoboard</li>
+                            <li>Macho-Hembra: Arduino a protoboard</li>
+                            <li>Hembra-Hembra: Sensores a Arduino</li>
+                            <li>Longitudes: 10cm, 20cm, 30cm</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Conexión</span>
+                        <span class="tag">Básico</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones Pulsadores -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="Botones" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔘</div>
+                        <h3>Botones Pulsadores</h3>
+                    </div>
+                    <p class="component-description">
+                        Interruptores momentáneos que permiten crear interfaces de entrada para tus proyectos.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Tipo: Push button (4 pines)</li>
+                            <li>Contacto: Normalmente abierto (NO)</li>
+                            <li>Requiere resistencia pull-up/down</li>
+                            <li>Voltaje: 12V DC máximo</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Entrada</span>
+                        <span class="tag">Digital</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Potenciómetro -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-d8ce80d52271?w=800&q=80" alt="Potenciómetro" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🎚️</div>
+                        <h3>Potenciómetro</h3>
+                    </div>
+                    <p class="component-description">
+                        Resistencia variable que permite controlar voltaje y crear interfaces de control analógico.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Valores: 1kΩ, 10kΩ, 100kΩ</li>
+                            <li>3 terminales: VCC, GND, Señal</li>
+                            <li>Rotación: 270° o 300°</li>
+                            <li>Uso: Control de volumen, brillo, etc.</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Entrada</span>
+                        <span class="tag">Analógico</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensors Section -->
+        <section class="category-section">
+            <h3>Sensores Populares</h3>
+            <p>Sensores que expanden las capacidades de interacción de tus proyectos:</p>
+        </section>
+
+        <div class="components-grid">
+            <!-- Sensor Ultrasónico -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=800&q=80" alt="Sensor Ultrasónico" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">📡</div>
+                        <h3>Sensor Ultrasónico HC-SR04</h3>
+                    </div>
+                    <p class="component-description">
+                        Mide distancias usando ondas ultrasónicas. Ideal para detectar obstáculos y crear sistemas de medición.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Rango: 2cm a 400cm</li>
+                            <li>Precisión: ±3mm</li>
+                            <li>Voltaje: 5V DC</li>
+                            <li>Pines: VCC, Trig, Echo, GND</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Sensor</span>
+                        <span class="tag">Distancia</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensor DHT11 -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-d8ce80d52271?w=800&q=80" alt="Sensor DHT11" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🌡️</div>
+                        <h3>Sensor DHT11</h3>
+                    </div>
+                    <p class="component-description">
+                        Sensor de temperatura y humedad digital. Perfecto para estaciones meteorológicas y control ambiental.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Temperatura: 0°C a 50°C (±2°C)</li>
+                            <li>Humedad: 20% a 90% (±5%)</li>
+                            <li>Voltaje: 3.3V - 5V</li>
+                            <li>Comunicación: Digital (1-wire)</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Sensor</span>
+                        <span class="tag">Ambiental</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensor PIR -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="Sensor PIR" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">👤</div>
+                        <h3>Sensor PIR HC-SR501</h3>
+                    </div>
+                    <p class="component-description">
+                        Detector de movimiento infrarrojo pasivo. Detecta presencia humana para sistemas de seguridad y automatización.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Rango: 3m a 7m (ajustable)</li>
+                            <li>Ángulo: 120° aproximadamente</li>
+                            <li>Voltaje: 5V - 20V DC</li>
+                            <li>Salida: Digital (HIGH/LOW)</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Sensor</span>
+                        <span class="tag">Movimiento</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LDR -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=800&q=80" alt="Fotoresistencia" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">☀️</div>
+                        <h3>Fotoresistencia (LDR)</h3>
+                    </div>
+                    <p class="component-description">
+                        Sensor de luz que varía su resistencia según la intensidad lumínica. Ideal para detectores de luz y oscuridad.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Resistencia oscuridad: 1MΩ</li>
+                            <li>Resistencia luz: 1kΩ - 10kΩ</li>
+                            <li>Voltaje: Hasta 150V</li>
+                            <li>Requiere divisor de voltaje</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Sensor</span>
+                        <span class="tag">Luz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actuators Section -->
+        <section class="category-section">
+            <h3>Actuadores y Salidas</h3>
+            <p>Componentes que permiten a Arduino interactuar con el mundo físico:</p>
+        </section>
+
+        <div class="components-grid">
+            <!-- Servomotor -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-d8ce80d52271?w=800&q=80" alt="Servomotor" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">⚙️</div>
+                        <h3>Servomotor SG90</h3>
+                    </div>
+                    <p class="component-description">
+                        Motor de posición controlada con precisión. Ideal para brazos robóticos, mecanismos de dirección y más.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Rotación: 180° (0° a 180°)</li>
+                            <li>Torque: 1.8kg/cm a 5V</li>
+                            <li>Velocidad: 0.1s/60° a 4.8V</li>
+                            <li>Control: Señal PWM</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Actuador</span>
+                        <span class="tag">Movimiento</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motor DC -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="Motor DC" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔄</div>
+                        <h3>Motor DC</h3>
+                    </div>
+                    <p class="component-description">
+                        Motor de corriente continua para movimiento rotativo. Usado en robots móviles, ventiladores y más.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Voltaje: 3V - 12V típico</li>
+                            <li>Requiere driver L298N o similar</li>
+                            <li>Control de velocidad con PWM</li>
+                            <li>Control de dirección con H-bridge</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Actuador</span>
+                        <span class="tag">Motor</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buzzer -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=800&q=80" alt="Buzzer" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔊</div>
+                        <h3>Buzzer Piezoeléctrico</h3>
+                    </div>
+                    <p class="component-description">
+                        Generador de tonos para alertas sonoras, alarmas y música simple. Disponible en activo y pasivo.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Voltaje: 3V - 12V</li>
+                            <li>Activo: Tono fijo al energizar</li>
+                            <li>Pasivo: Requiere señal PWM</li>
+                            <li>Frecuencia: 2kHz - 4kHz típico</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Salida</span>
+                        <span class="tag">Audio</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relé -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-d8ce80d52271?w=800&q=80" alt="Módulo Relé" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔌</div>
+                        <h3>Módulo Relé</h3>
+                    </div>
+                    <p class="component-description">
+                        Interruptor electrónico que permite controlar cargas de alto voltaje (AC/DC) de forma segura.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Control: 5V DC (Arduino)</li>
+                            <li>Carga: 110V/220V AC hasta 10A</li>
+                            <li>Canales: 1, 2, 4, 8 relés</li>
+                            <li>Incluye LED indicador</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Actuador</span>
+                        <span class="tag">Potencia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display Section -->
+        <section class="category-section">
+            <h3>Pantallas y Displays</h3>
+            <p>Elementos visuales para mostrar información:</p>
+        </section>
+
+        <div class="components-grid">
+            <!-- LCD 16x2 -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="LCD" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">📟</div>
+                        <h3>LCD 16x2</h3>
+                    </div>
+                    <p class="component-description">
+                        Pantalla de cristal líquido que muestra 2 filas de 16 caracteres. Ideal para mostrar mensajes y datos.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Tamaño: 16 columnas x 2 filas</li>
+                            <li>Con o sin módulo I2C</li>
+                            <li>Voltaje: 5V</li>
+                            <li>Retroiluminación LED azul/verde</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Display</span>
+                        <span class="tag">Texto</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OLED -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=800&q=80" alt="OLED" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🖥️</div>
+                        <h3>Display OLED 0.96"</h3>
+                    </div>
+                    <p class="component-description">
+                        Pantalla OLED pequeña con excelente contraste. Perfecta para interfaces compactas y wearables.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Resolución: 128x64 píxeles</li>
+                            <li>Tamaño: 0.96 pulgadas</li>
+                            <li>Comunicación: I2C o SPI</li>
+                            <li>Colores: Monocromático (blanco/azul)</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Display</span>
+                        <span class="tag">Gráfico</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Display 7 Segmentos -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1553406830-d8ce80d52271?w=800&q=80" alt="7 Segmentos" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">🔢</div>
+                        <h3>Display 7 Segmentos</h3>
+                    </div>
+                    <p class="component-description">
+                        Display LED para mostrar números. Ideal para relojes, contadores y medidores simples.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Dígitos: 1 a 4 displays</li>
+                            <li>Tipo: Ánodo o Cátodo común</li>
+                            <li>Color: Rojo, verde, azul</li>
+                            <li>Control: Directo o con MAX7219</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Display</span>
+                        <span class="tag">Numérico</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matriz LED -->
+            <div class="component-card">
+                <img src="https://images.unsplash.com/photo-1601524869554-6a9fc2c41b4b?w=800&q=80" alt="Matriz LED" class="component-image">
+                <div class="component-content">
+                    <div class="component-header">
+                        <div class="component-icon">⬜</div>
+                        <h3>Matriz LED 8x8</h3>
+                    </div>
+                    <p class="component-description">
+                        Arreglo de 64 LEDs en formato matricial. Perfecto para crear animaciones, juegos y mensajes dinámicos.
+                    </p>
+                    <div class="component-specs">
+                        <h4>Especificaciones:</h4>
+                        <ul>
+                            <li>Tamaño: 8x8 LEDs (64 total)</li>
+                            <li>Con controlador MAX7219</li>
+                            <li>Encadenable (múltiples matrices)</li>
+                            <li>Control SPI (3 pines)</li>
+                        </ul>
+                    </div>
+                    <div class="component-tags">
+                        <span class="tag">Display</span>
+                        <span class="tag">Gráfico</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safety Tips -->
+        <section class="category-section">
+            <h3>⚠️ Consejos de Seguridad</h3>
+            
+            <div class="warning-box">
+                <strong>🔴 Importante - Manejo Seguro de Componentes:</strong>
+                <p style="color: #666; margin-top: 0.5rem;">Siempre verifica la polaridad de componentes como LEDs, capacitores electrolíticos y diodos antes de conectarlos. Una conexión incorrecta puede dañar permanentemente el componente o tu Arduino.</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Precaución con Voltajes:</strong>
+                <p style="color: #666; margin-top: 0.5rem;">Nunca conectes cargas que requieran más de 40mA directamente a los pines de Arduino. Usa transistores o relés para controlar motores y otros dispositivos de alta corriente.</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>🔋 Alimentación Adecuada:</strong>
+                <p style="color: #666; margin-top: 0.5rem;">No alimentes motores o servos desde los pines de 5V del Arduino. Usa una fuente de alimentación externa para evitar reiniciar el microcontrolador por caída de voltaje.</p>
+            </div>
+
+            <div class="info-box">
+                <strong>✅ Mejores Prácticas:</strong>
+                <ul style="margin-top: 0.5rem; list-style: none; padding: 0;">
+                    <li style="padding: 0.3rem 0;">✓ Desconecta la alimentación antes de modificar conexiones</li>
+                    <li style="padding: 0.3rem 0;">✓ Usa resistencias limitadoras con LEDs</li>
+                    <li style="padding: 0.3rem 0;">✓ Verifica el código antes de cargar al Arduino</li>
+                    <li style="padding: 0.3rem 0;">✓ Mantén tu espacio de trabajo limpio y organizado</li>
+                    <li style="padding: 0.3rem 0;">✓ Documenta tus conexiones y código</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Shopping List -->
+        <div class="shopping-list">
+            <h3>🛒 Kit de Inicio Recomendado</h3>
+            <p style="color: #666; margin-bottom: 2rem;">Componentes esenciales para comenzar con Arduino:</p>
+
+            <div class="kit-option">
+                <h4>📦 Kit Básico para Principiantes</h4>
+                <p style="color: #666; margin-bottom: 1rem;">Todo lo necesario para empezar:</p>
+                <div class="kit-items">
+                    <div class="kit-item">✓ 1x Arduino UNO R3</div>
+                    <div class="kit-item">✓ 1x Cable USB tipo B</div>
+                    <div class="kit-item">✓ 1x Protoboard 830 puntos</div>
+                    <div class="kit-item">✓ 65x Cables Jumper variados</div>
+                    <div class="kit-item">✓ 20x LEDs (colores variados)</div>
+                    <div class="kit-item">✓ 20x Resistencias 220Ω</div>
+                    <div class="kit-item">✓ 10x Resistencias 10kΩ</div>
+                    <div class="kit-item">✓ 5x Botones pulsadores</div>
+                    <div class="kit-item">✓ 2x Potenciómetros 10kΩ</div>
+                    <div class="kit-item">✓ 1x Buzzer piezoeléctrico</div>
+                    <div class="kit-item">✓ 2x Fotoresistencias (LDR)</div>
+                    <div class="kit-item">✓ 1x Servomotor SG90</div>
+                </div>
+            </div>
+
+            <div class="kit-option">
+                <h4>📦 Kit Intermedio</h4>
+                <p style="color: #666; margin-bottom: 1rem;">Expande tus posibilidades:</p>
+                <div class="kit-items">
+                    <div class="kit-item">✓ Todo del kit básico</div>
+                    <div class="kit-item">✓ 1x Sensor ultrasónico HC-SR04</div>
+                    <div class="kit-item">✓ 1x Sensor DHT11</div>
+                    <div class="kit-item">✓ 1x Sensor PIR HC-SR501</div>
+                    <div class="kit-item">✓ 1x LCD 16x2 con I2C</div>
+                    <div class="kit-item">✓ 1x Display OLED 0.96"</div>
+                    <div class="kit-item">✓ 1x Módulo relé 2 canales</div>
+                    <div class="kit-item">✓ 2x Motores DC con ruedas</div>
+                    <div class="kit-item">✓ 1x Driver L298N</div>
+                    <div class="kit-item">✓ 1x Matriz LED 8x8</div>
+                    <div class="kit-item">✓ 1x Módulo Bluetooth HC-05</div>
+                    <div class="kit-item">✓ 1x Fuente 9V/2A</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>💰 Consejo de Compra:</strong>
+                Los kits de inicio suelen ser más económicos que comprar componentes individuales. Busca kits que incluyan una caja organizadora y libro de proyectos en español.
+            </div>
+        </div>
+
+        <!-- Where to Buy -->
+        <section class="category-section">
+            <h3>🌐 ¿Dónde Comprar?</h3>
+            <p>Opciones para adquirir tus componentes de Arduino:</p>
+
+            <div class="components-grid" style="margin-top: 2rem;">
+                <div class="concept-card" style="background: rgba(102, 126, 234, 0.05); border: 2px solid rgba(102, 126, 234, 0.2);">
+                    <div class="component-icon">🏪</div>
+                    <h3 style="color: #667eea;">Tiendas Locales</h3>
+                    <p style="color: #666;">
+                        Busca tiendas de electrónica en tu ciudad. Ventajas: soporte local, sin espera de envío, puedes ver los productos.
+                    </p>
+                </div>
+
+                <div class="concept-card" style="background: rgba(102, 126, 234, 0.05); border: 2px solid rgba(102, 126, 234, 0.2);">
+                    <div class="component-icon">📦</div>
+                    <h3 style="color: #667eea;">Tiendas Online</h3>
+                    <p style="color: #666;">
+                        Amazon, MercadoLibre, AliExpress. Mayor variedad, precios competitivos, reviews de usuarios. Compara precios y tiempos de envío.
+                    </p>
+                </div>
+
+                <div class="concept-card" style="background: rgba(102, 126, 234, 0.05); border: 2px solid rgba(102, 126, 234, 0.2);">
+                    <div class="component-icon">🎓</div>
+                    <h3 style="color: #667eea;">Distribuidores Oficiales</h3>
+                    <p style="color: #666;">
+                        Arduino.cc tiene distribuidores autorizados. Garantía de productos originales y soporte técnico oficial.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 2rem;">
+                <strong>💡 Tip Importante:</strong>
+                Los componentes genéricos (compatibles) funcionan igual que los originales a menor costo. Arduino UNO es open-hardware, así que las versiones compatibles son legales y funcionales.
+            </div>
+        </section>
+
+        <!-- Back Button -->
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="portafolio-arduino.html" class="back-button" style="padding: 1rem 3rem; font-size: 1.1rem;">
+                ← Volver al Portafolio Principal
+            </a>
+        </div>
+    </main>
+</body>
+</html>

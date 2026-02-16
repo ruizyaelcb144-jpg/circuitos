@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptos Básicos de Arduino</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section h2 {
+            font-size: 3rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: #f0f0f0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .concept-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .concept-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .concept-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .concept-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .concept-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .concept-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .concept-card li {
+            color: #666;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .concept-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Full Width Section */
+        .full-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .full-section h3 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .full-section p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: 'C++';
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .code-block pre {
+            color: #f0f0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .code-number {
+            color: #b5cea8;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        /* Image Section */
+        .image-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin: 1rem 0;
+        }
+
+        .image-caption {
+            color: #666;
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .info-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-section h2 {
+                font-size: 2rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-section {
+                padding: 2rem;
+            }
+
+            .code-block {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 9s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>📚 Conceptos Básicos de Arduino</h1>
+            <a href="portafolio-arduino.html" class="back-button">
+                ← Volver al Portafolio
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h2>Fundamentos de Arduino</h2>
+            <p>Explora los conceptos esenciales para comenzar tu aventura en el mundo de la electrónica y programación con Arduino</p>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Card 1 -->
+            <div class="concept-card">
+                <div class="concept-icon">🔧</div>
+                <h3>¿Qué es Arduino?</h3>
+                <p>Arduino es una plataforma de hardware y software de código abierto que facilita la creación de proyectos electrónicos interactivos.</p>
+                <ul>
+                    <li>Plataforma de prototipos electrónicos</li>
+                    <li>Fácil de usar para principiantes</li>
+                    <li>Ideal para proyectos de IoT</li>
+                    <li>Gran comunidad de apoyo</li>
+                </ul>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="concept-card">
+                <div class="concept-icon">⚡</div>
+                <h3>Componentes Principales</h3>
+                <p>Conoce las partes esenciales de una placa Arduino:</p>
+                <ul>
+                    <li>Microcontrolador (ATmega328P)</li>
+                    <li>Pines digitales (0-13)</li>
+                    <li>Pines analógicos (A0-A5)</li>
+                    <li>Puerto USB para programación</li>
+                    <li>Alimentación (5V/3.3V)</li>
+                </ul>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="concept-card">
+                <div class="concept-icon">💻</div>
+                <h3>Entorno de Programación</h3>
+                <p>El IDE de Arduino es el software que utilizamos para escribir y cargar código:</p>
+                <ul>
+                    <li>Editor de código simple</li>
+                    <li>Compilador integrado</li>
+                    <li>Monitor serial para depuración</li>
+                    <li>Librería de ejemplos incluida</li>
+                    <li>Gestor de librerías</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Structure Section -->
+        <section class="full-section">
+            <h3>Estructura de un Programa Arduino</h3>
+            <p>Todo programa de Arduino se compone de dos funciones principales que son obligatorias:</p>
+            
+            <div class="info-box">
+                <strong>📌 Nota Importante:</strong>
+                Estas dos funciones son el corazón de cualquier sketch de Arduino. La función setup() se ejecuta una sola vez al iniciar, mientras que loop() se ejecuta continuamente.
+            </div>
+
+            <div class="code-block">
+                <pre><span class="code-comment">// Función setup: Se ejecuta una vez al inicio</span>
+<span class="code-keyword">void</span> <span class="code-function">setup</span>() {
+  <span class="code-comment">// Configuración de pines y variables iniciales</span>
+  <span class="code-function">pinMode</span>(<span class="code-number">13</span>, OUTPUT);  <span class="code-comment">// Configura el pin 13 como salida</span>
+  <span class="code-function">Serial.begin</span>(<span class="code-number">9600</span>);       <span class="code-comment">// Inicia comunicación serial</span>
+}
+
+<span class="code-comment">// Función loop: Se ejecuta continuamente</span>
+<span class="code-keyword">void</span> <span class="code-function">loop</span>() {
+  <span class="code-comment">// Código que se repite infinitamente</span>
+  <span class="code-function">digitalWrite</span>(<span class="code-number">13</span>, HIGH);  <span class="code-comment">// Enciende el LED</span>
+  <span class="code-function">delay</span>(<span class="code-number">1000</span>);              <span class="code-comment">// Espera 1 segundo</span>
+  <span class="code-function">digitalWrite</span>(<span class="code-number">13</span>, LOW);   <span class="code-comment">// Apaga el LED</span>
+  <span class="code-function">delay</span>(<span class="code-number">1000</span>);              <span class="code-comment">// Espera 1 segundo</span>
+}</pre>
+            </div>
+        </section>
+
+        <!-- Pins Section -->
+        <section class="full-section">
+            <h3>Tipos de Pines</h3>
+            <p>Arduino cuenta con diferentes tipos de pines, cada uno con funciones específicas:</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tipo de Pin</th>
+                        <th>Función</th>
+                        <th>Valores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Digitales</strong></td>
+                        <td>Entrada/Salida digital (ON/OFF)</td>
+                        <td>HIGH (5V) o LOW (0V)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Analógicos</strong></td>
+                        <td>Lectura de valores variables</td>
+                        <td>0 a 1023 (0V a 5V)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PWM (~)</strong></td>
+                        <td>Salida analógica simulada</td>
+                        <td>0 a 255 (0% a 100%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Alimentación</strong></td>
+                        <td>Suministro de energía</td>
+                        <td>5V, 3.3V, GND</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Functions Section -->
+        <section class="full-section">
+            <h3>Funciones Básicas Esenciales</h3>
+            
+            <h4 style="color: #667eea; margin-top: 2rem;">Entrada/Salida Digital:</h4>
+            <div class="code-block">
+                <pre><span class="code-comment">// Configurar modo del pin</span>
+<span class="code-function">pinMode</span>(pin, MODE);  <span class="code-comment">// MODE puede ser INPUT, OUTPUT o INPUT_PULLUP</span>
+
+<span class="code-comment">// Escribir valor digital</span>
+<span class="code-function">digitalWrite</span>(pin, VALUE);  <span class="code-comment">// VALUE: HIGH o LOW</span>
+
+<span class="code-comment">// Leer valor digital</span>
+<span class="code-keyword">int</span> valor = <span class="code-function">digitalRead</span>(pin);  <span class="code-comment">// Retorna HIGH o LOW</span></pre>
+            </div>
+
+            <h4 style="color: #667eea; margin-top: 2rem;">Entrada/Salida Analógica:</h4>
+            <div class="code-block">
+                <pre><span class="code-comment">// Leer valor analógico (0-1023)</span>
+<span class="code-keyword">int</span> valor = <span class="code-function">analogRead</span>(pin);
+
+<span class="code-comment">// Escribir valor PWM (0-255)</span>
+<span class="code-function">analogWrite</span>(pin, valor);  <span class="code-comment">// Solo en pines PWM (~)</span></pre>
+            </div>
+
+            <h4 style="color: #667eea; margin-top: 2rem;">Control de Tiempo:</h4>
+            <div class="code-block">
+                <pre><span class="code-comment">// Pausar ejecución en milisegundos</span>
+<span class="code-function">delay</span>(<span class="code-number">1000</span>);  <span class="code-comment">// Pausa de 1 segundo</span>
+
+<span class="code-comment">// Obtener tiempo transcurrido</span>
+<span class="code-keyword">unsigned long</span> tiempo = <span class="code-function">millis</span>();  <span class="code-comment">// Milisegundos desde el inicio</span></pre>
+            </div>
+
+            <h4 style="color: #667eea; margin-top: 2rem;">Comunicación Serial:</h4>
+            <div class="code-block">
+                <pre><span class="code-comment">// Iniciar comunicación serial</span>
+<span class="code-function">Serial.begin</span>(<span class="code-number">9600</span>);  <span class="code-comment">// Velocidad en baudios</span>
+
+<span class="code-comment">// Enviar datos</span>
+<span class="code-function">Serial.print</span>(<span class="code-string">"Hola"</span>);      <span class="code-comment">// Sin salto de línea</span>
+<span class="code-function">Serial.println</span>(<span class="code-string">"Mundo"</span>);   <span class="code-comment">// Con salto de línea</span>
+
+<span class="code-comment">// Leer datos disponibles</span>
+<span class="code-keyword">if</span> (<span class="code-function">Serial.available</span>() > <span class="code-number">0</span>) {
+  <span class="code-keyword">char</span> dato = <span class="code-function">Serial.read</span>();
+}</pre>
+            </div>
+        </section>
+
+        <!-- Image Section -->
+        <section class="image-section">
+            <h3 style="color: #333; margin-bottom: 1.5rem;">Placa Arduino UNO - Anatomía</h3>
+            <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=1000&q=80" alt="Arduino UNO Board">
+            <p class="image-caption">Placa Arduino UNO con sus componentes principales identificados</p>
+        </section>
+
+        <!-- Example Project -->
+        <section class="full-section">
+            <h3>Proyecto de Ejemplo: Blink LED</h3>
+            <p>El proyecto "Hola Mundo" de Arduino - hacer parpadear un LED:</p>
+            
+            <div class="info-box">
+                <strong>🎯 Objetivo:</strong>
+                Hacer que un LED conectado al pin 13 parpadee cada segundo, alternando entre encendido y apagado.
+            </div>
+
+            <div class="code-block">
+                <pre><span class="code-comment">// Definimos el pin del LED</span>
+<span class="code-keyword">const int</span> ledPin = <span class="code-number">13</span>;
+
+<span class="code-keyword">void</span> <span class="code-function">setup</span>() {
+  <span class="code-comment">// Configuramos el pin como salida</span>
+  <span class="code-function">pinMode</span>(ledPin, OUTPUT);
+}
+
+<span class="code-keyword">void</span> <span class="code-function">loop</span>() {
+  <span class="code-comment">// Encendemos el LED</span>
+  <span class="code-function">digitalWrite</span>(ledPin, HIGH);
+  <span class="code-function">delay</span>(<span class="code-number">1000</span>);  <span class="code-comment">// Esperamos 1 segundo</span>
+  
+  <span class="code-comment">// Apagamos el LED</span>
+  <span class="code-function">digitalWrite</span>(ledPin, LOW);
+  <span class="code-function">delay</span>(<span class="code-number">1000</span>);  <span class="code-comment">// Esperamos 1 segundo</span>
+}</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Explicación:</strong>
+                Este programa hace que el LED integrado en el pin 13 se encienda durante un segundo y se apague durante otro segundo, repitiéndose continuamente. Es el proyecto más básico y fundamental para comenzar con Arduino.
+            </div>
+        </section>
+
+        <!-- Variables Section -->
+        <section class="full-section">
+            <h3>Variables y Tipos de Datos</h3>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tipo de Dato</th>
+                        <th>Descripción</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>int</strong></td>
+                        <td>Número entero (-32,768 a 32,767)</td>
+                        <td>int edad = 25;</td>
+                    </tr>
+                    <tr>
+                        <td><strong>float</strong></td>
+                        <td>Número decimal</td>
+                        <td>float temperatura = 23.5;</td>
+                    </tr>
+                    <tr>
+                        <td><strong>boolean</strong></td>
+                        <td>Verdadero o falso</td>
+                        <td>boolean encendido = true;</td>
+                    </tr>
+                    <tr>
+                        <td><strong>char</strong></td>
+                        <td>Un solo carácter</td>
+                        <td>char letra = 'A';</td>
+                    </tr>
+                    <tr>
+                        <td><strong>String</strong></td>
+                        <td>Cadena de texto</td>
+                        <td>String nombre = "Arduino";</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Tips Section -->
+        <section class="full-section">
+            <h3>Consejos para Principiantes</h3>
+            
+            <div class="content-grid" style="margin-top: 2rem;">
+                <div class="concept-card">
+                    <div class="concept-icon">📖</div>
+                    <h3>Comienza Simple</h3>
+                    <p>Empieza con proyectos básicos como Blink LED antes de pasar a proyectos más complejos. La práctica constante es la clave del éxito.</p>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-icon">🔍</div>
+                    <h3>Usa el Monitor Serial</h3>
+                    <p>El monitor serial es tu mejor amigo para depurar. Úsalo para ver valores de variables y entender qué está pasando en tu código.</p>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-icon">📚</div>
+                    <h3>Consulta Documentación</h3>
+                    <p>La documentación oficial de Arduino y los ejemplos incluidos en el IDE son recursos invaluables para aprender.</p>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-icon">⚠️</div>
+                    <h3>Cuida las Conexiones</h3>
+                    <p>Siempre verifica las conexiones antes de energizar. Un corto circuito puede dañar tu Arduino o componentes.</p>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-icon">🎨</div>
+                    <h3>Experimenta y Prueba</h3>
+                    <p>No tengas miedo de experimentar. Modifica los ejemplos, cambia valores y observa qué sucede.</p>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-icon">👥</div>
+                    <h3>Únete a la Comunidad</h3>
+                    <p>La comunidad Arduino es muy activa. Foros, grupos y tutoriales están disponibles para ayudarte en tu aprendizaje.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Back Button -->
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="portafolio-arduino.html" class="back-button" style="padding: 1rem 3rem; font-size: 1.1rem;">
+                ← Volver al Portafolio Principal
+            </a>
+        </div>
+    </main>
+</body>
+</html>
