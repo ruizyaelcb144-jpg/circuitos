@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuitos Eléctricos - Serie vs Paralelo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .card-header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .circuit-section {
+            display: none;
+        }
+
+        .circuit-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .circuit-diagram {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .circuit-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .info-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .formula {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .formula strong {
+            color: #d63384;
+        }
+
+        .advantages {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .advantages h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .advantages ul {
+            margin-left: 20px;
+            color: #155724;
+        }
+
+        .advantages li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .comparison {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .comparison h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .comparison-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .comparison-image-box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-image-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .comparison-image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card-header">
+            <h1>⚡ Circuitos Eléctricos ⚡</h1>
+            <p>Aprende la diferencia entre circuitos en serie y en paralelo</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showCircuit('serie')">🔗 Circuito en Serie</div>
+            <div class="tab" onclick="showCircuit('paralelo')">⚡ Circuito en Paralelo</div>
+            <div class="tab" onclick="showCircuit('comparacion')">📊 Comparación</div>
+        </div>
+
+        <div class="content">
+            <!-- Circuito en Serie -->
+            <div id="serie" class="circuit-section active">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Circuito en Serie</h2>
+                
+                <div class="circuit-diagram">
+                    <!-- PITO: Aquí va la imagen del circuito en serie -->
+                    <!-- Cambia "ruta-imagen-serie.jpg" por la ruta de tu imagen -->
+                    <img src="serie.PNG" alt="Circuito en Serie" class="circuit-image">
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">La corriente fluye por un solo camino</p>
+                </div>
+
+                <div class="formula">
+                    <strong>Fórmulas clave:</strong><br>
+                    • Resistencia Total: R<sub>total</sub> = R₁ + R₂ + R₃ + ...<br>
+                    • Corriente: I = V / R<sub>total</sub> (misma en todos los componentes)<br>
+                    • Voltaje: V<sub>total</sub> = V₁ + V₂ + V₃ + ...
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>📍 Características</h3>
+                        <p>Los componentes están conectados uno tras otro formando una única ruta para el flujo de corriente.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔌 Corriente</h3>
+                        <p>La misma corriente fluye a través de todos los componentes (I₁ = I₂ = I₃).</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>⚡ Voltaje</h3>
+                        <p>El voltaje se divide entre los componentes. La suma de voltajes parciales es igual al voltaje total.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔧 Resistencia</h3>
+                        <p>La resistencia total es la suma de todas las resistencias individuales.</p>
+                    </div>
+                </div>
+
+                <div class="advantages">
+                    <h3>✅ Ventajas y Aplicaciones</h3>
+                    <ul>
+                        <li><strong>Control simple:</strong> Un solo interruptor controla todo el circuito</li>
+                        <li><strong>Menos cableado:</strong> Requiere menos cable que un circuito paralelo</li>
+                        <li><strong>Fácil detección de fallas:</strong> Si un componente falla, todo se apaga</li>
+                        <li><strong>Aplicaciones:</strong> Luces navideñas antiguas, interruptores de seguridad</li>
+                    </ul>
+                </div>
+
+                <div class="advantages" style="background: #f8d7da; border-color: #dc3545;">
+                    <h3 style="color: #721c24;">⚠️ Desventajas</h3>
+                    <ul style="color: #721c24;">
+                        <li>Si un componente falla, todo el circuito deja de funcionar</li>
+                        <li>No se pueden controlar componentes individualmente</li>
+                        <li>La resistencia total aumenta con cada componente</li>
+                    </ul>
+                </div>
+
+                <div class="circuit-diagram">
+                    <!-- PITO: Aquí va la imagen del circuito en serie -->
+                    <!-- Cambia "ruta-imagen-serie.jpg" por la ruta de tu imagen -->
+                    <img src="practica.jpeg" alt="Circuito en Serie" class="circuit-image">
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">La corriente fluye por un solo camino</p>
+                </div>
+            </div>
+
+            <!-- Circuito en Paralelo -->
+            <div id="paralelo" class="circuit-section">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Circuito en Paralelo</h2>
+                
+                <div class="circuit-diagram">
+                    <!-- PITO: Aquí va la imagen del circuito en paralelo -->
+                    <!-- Cambia "ruta-imagen-paralelo.jpg" por la ruta de tu imagen -->
+                    <img src="paralelo.PNG" alt="Circuito en Paralelo" class="circuit-image">
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">La corriente se divide en múltiples caminos</p>
+                </div>
+
+                <div class="formula">
+                    <strong>Fórmulas clave:</strong><br>
+                    • Resistencia Total: 1/R<sub>total</sub> = 1/R₁ + 1/R₂ + 1/R₃ + ...<br>
+                    • Corriente Total: I<sub>total</sub> = I₁ + I₂ + I₃ + ...<br>
+                    • Voltaje: V = V₁ = V₂ = V₃ (mismo en todos los componentes)
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>📍 Características</h3>
+                        <p>Los componentes están conectados en múltiples caminos paralelos, cada uno con sus propios nodos.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔌 Corriente</h3>
+                        <p>La corriente se divide entre las ramas. La corriente total es la suma de las corrientes en cada rama.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>⚡ Voltaje</h3>
+                        <p>El voltaje es el mismo en todos los componentes paralelos (V₁ = V₂ = V₃).</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔧 Resistencia</h3>
+                        <p>La resistencia total es menor que la resistencia más pequeña del circuito.</p>
+                    </div>
+                </div>
+
+                <div class="advantages">
+                    <h3>✅ Ventajas y Aplicaciones</h3>
+                    <ul>
+                        <li><strong>Independencia:</strong> Cada componente funciona independientemente</li>
+                        <li><strong>Mismo voltaje:</strong> Todos los dispositivos reciben el voltaje completo</li>
+                        <li><strong>Redundancia:</strong> Si un componente falla, los demás siguen funcionando</li>
+                        <li><strong>Control individual:</strong> Cada rama puede tener su propio interruptor</li>
+                        <li><strong>Aplicaciones:</strong> Instalaciones eléctricas domésticas, sistemas de iluminación, enchufes</li>
+                    </ul>
+                </div>
+
+                <div class="advantages" style="background: #f8d7da; border-color: #dc3545;">
+                    <h3 style="color: #721c24;">⚠️ Desventajas</h3>
+                    <ul style="color: #721c24;">
+                        <li>Requiere más cable que un circuito en serie</li>
+                        <li>Instalación más compleja</li>
+                        <li>Mayor consumo de corriente total</li>
+                    </ul>
+                </div>
+
+                <div class="circuit-diagram">
+                    <!-- PITO: Aquí va la imagen del circuito en serie -->
+                    <!-- Cambia "ruta-imagen-serie.jpg" por la ruta de tu imagen -->
+                    <img src="practica.jpeg" alt="Circuito en Serie" class="circuit-image">
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">La corriente fluye por un solo camino</p>
+                </div>
+            </div>
+
+            <!-- Comparación -->
+            <div id="comparacion" class="circuit-section">
+                <div class="comparison">
+                    <h2>Tabla Comparativa: Serie vs Paralelo</h2>
+                    
+                    <!-- PITO: Aquí van las imágenes de comparación -->
+                    <div class="comparison-images">
+                        <div class="comparison-image-box">
+                            <h3>🔗 Circuito en Serie</h3>
+                            <!-- Cambia "ruta-imagen-serie-comparacion.jpg" por la ruta de tu imagen -->
+                            <img src="ruta-imagen-serie-comparacion.jpg" alt="Circuito Serie Comparación" class="circuit-image">
+                            <p style="color: #666; margin-top: 10px;">Conexión en cadena</p>
+                        </div>
+                        <div class="comparison-image-box">
+                            <h3>⚡ Circuito en Paralelo</h3>
+                            <!-- Cambia "ruta-imagen-paralelo-comparacion.jpg" por la ruta de tu imagen -->
+                            <img src="ruta-imagen-paralelo-comparacion.jpg" alt="Circuito Paralelo Comparación" class="circuit-image">
+                            <p style="color: #666; margin-top: 10px;">Múltiples caminos</p>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>🔗 Circuito en Serie</th>
+                                <th>⚡ Circuito en Paralelo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Conexión</strong></td>
+                                <td>Un solo camino continuo</td>
+                                <td>Múltiples caminos independientes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Corriente</strong></td>
+                                <td>Igual en todos los componentes (I = constante)</td>
+                                <td>Se divide entre las ramas (I<sub>total</sub> = I₁ + I₂ + ...)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Voltaje</strong></td>
+                                <td>Se divide (V<sub>total</sub> = V₁ + V₂ + ...)</td>
+                                <td>Igual en todos los componentes (V = constante)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Resistencia Total</strong></td>
+                                <td>R<sub>total</sub> = R₁ + R₂ + R₃ + ...</td>
+                                <td>1/R<sub>total</sub> = 1/R₁ + 1/R₂ + 1/R₃ + ...</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Si un componente falla</strong></td>
+                                <td>Todo el circuito se interrumpe</td>
+                                <td>Los demás componentes siguen funcionando</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aplicación principal</strong></td>
+                                <td>Interruptores de seguridad, luces decorativas</td>
+                                <td>Instalaciones eléctricas domésticas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ventaja principal</strong></td>
+                                <td>Simplicidad y menos cableado</td>
+                                <td>Independencia y confiabilidad</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Desventaja principal</strong></td>
+                                <td>Dependencia total entre componentes</td>
+                                <td>Mayor complejidad y cableado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 30px; padding: 25px; background: #e7f3ff; border-radius: 15px; border-left: 5px solid #0066cc;">
+                    <h3 style="color: #0066cc; margin-bottom: 15px;">💡 Ejemplo Práctico</h3>
+                    <p style="color: #333; line-height: 1.8; margin-bottom: 10px;">
+                        <strong>En tu casa:</strong> Las luces y enchufes están conectados en paralelo. Por eso cuando apagas una luz, las demás siguen funcionando. Si estuvieran en serie, al apagar una luz, ¡todas se apagarían!
+                    </p>
+                    <p style="color: #333; line-height: 1.8;">
+                        <strong>Luces de Navidad:</strong> Las luces navideñas antiguas usaban circuitos en serie. Si una bombilla se quemaba, toda la cadena dejaba de funcionar. Las modernas usan circuitos paralelos o tienen protección especial.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showCircuit(circuitType) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.circuit-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remover clase active de todas las pestañas
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(circuitType).classList.add('active');
+            
+            // Activar la pestaña correspondiente
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
