@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>3. Circuito Control de Led con Potenciometro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --accent: #f0a500;
+      --accent2: #e05c00;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --border: #30363d;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Source Sans 3', sans-serif;
+      min-height: 100vh;
+      padding: 0 0 80px 0;
+    }
+
+    /* ── TOP BAND ── */
+    .top-band {
+      background: linear-gradient(135deg, #1a1000 0%, #0d1117 60%);
+      border-bottom: 3px solid var(--accent);
+      padding: 48px 5vw 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .top-band::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 40px,
+        rgba(240,165,0,0.03) 40px,
+        rgba(240,165,0,0.03) 41px
+      );
+    }
+    .section-number {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(64px, 12vw, 120px);
+      font-weight: 700;
+      color: rgba(240,165,0,0.10);
+      position: absolute;
+      top: -10px;
+      right: 5vw;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .subtitle {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(22px, 4vw, 42px);
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 1;
+    }
+    .subtitle span {
+      color: var(--text);
+    }
+    .subtitle-line {
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin-top: 12px;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 5vw;
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 40px;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+    .section-card:nth-child(2) { animation-delay: 0.1s; }
+    .section-card:nth-child(3) { animation-delay: 0.2s; }
+    .section-card:nth-child(4) { animation-delay: 0.3s; }
+    .section-card:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .image-zone {
+      padding: 28px 24px;
+    }
+    .img-placeholder {
+      width: 100%;
+      min-height: 260px;
+      background: var(--bg);
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      transition: border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .img-placeholder:hover { border-color: var(--accent); }
+    .img-placeholder svg { opacity: 0.35; }
+    .img-placeholder span { opacity: 0.6; font-style: italic; }
+
+    /* Real image (if inserted) */
+    .img-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    /* ── DESCRIPTION BOX ── */
+    .desc-zone {
+      padding: 0 24px 28px;
+    }
+    .desc-box {
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 18px 20px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: #c9d1d9;
+      font-weight: 300;
+    }
+    .desc-box strong { color: var(--accent); font-weight: 600; }
+
+    .desc-placeholder {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 14px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 24px;
+    }
+
+    /* ── FINAL BADGE ── */
+    .final-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <div class="top-band">
+    <div class="section-number">2</div>
+    <div class="subtitle">
+      3.&nbsp;<span>Circuito Control de Led</span><br>con Potenciometro
+    </div>
+    <div class="subtitle-line"></div>
+  </div>
+
+  <div class="container">
+
+    <!-- ── CARD 1: Diagrama del circuito ── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Diagrama del Circuito</div>
+      </div>
+      <div class="image-zone">
+        <div class="img-placeholder">
+          <img src="circuito3.PNG" alt="Diagrama"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CARD 2: Cómo se elaboró + descripción ── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">Cómo se Elaboró el Circuito</div>
+      </div>
+      <div class="desc-zone" style="padding-top:24px;">
+        <div class="desc-box">
+          <span class="desc-placeholder">✏️ Escribe aquí la descripción de cómo se elaboró el circuito (materiales, pasos, conexiones, etc.)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CARD 3: Diagrama en Tinkercad ── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-icon">💻</div>
+        <div class="card-title">Simulación en Tinkercad</div>
+      </div>
+      <div class="image-zone">
+        <div class="img-placeholder">
+          <img src="tinker3.PNG" alt="Tinkercad"/> 
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="desc-zone" style="padding-top:20px;">
+        <div class="desc-box">
+          <span class="desc-placeholder">✏️ Escribe aquí la descripción de la simulación en Tinkercad (observaciones, resultados, etc.)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CARD 4: Foto final de la práctica ── -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-icon">📷</div>
+        <div class="card-title">Foto Final de la Práctica</div>
+      </div>
+      <div class="image-zone">
+        <div style="margin-bottom:12px;">
+          <span class="final-badge">✅ Práctica Realizada</span>
+        </div>
+        <div class="img-placeholder">
+          <img src="real3.jpeg" alt="Foto final"/> 
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
