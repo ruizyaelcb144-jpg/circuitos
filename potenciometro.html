@@ -245,7 +245,56 @@
       </div>
       <div class="desc-zone" style="padding-top:24px;">
         <div class="desc-box">
-          <span class="desc-placeholder">✏️ Escribe aquí la descripción de cómo se elaboró el circuito (materiales, pasos, conexiones, etc.)</span>
+          <span class="desc-placeholder">🔧 Materiales necesarios
+
+🔋 Batería de 9V
+
+💡 LED
+
+🎛 Potenciómetro (10kΩ recomendado)
+
+🔌 Resistencia (330Ω o 470Ω)
+
+Cables
+
+Protoboard (opcional pero recomendable)
+
+🧠 ¿Cómo funciona?
+
+El potenciómetro actúa como una resistencia variable.
+Al girarlo, cambia la cantidad de corriente que pasa al LED → eso hace que el LED brille más o menos.
+
+⚠️ Importante: Siempre debes usar una resistencia fija (330Ω–470Ω) para proteger el LED y evitar que se queme.
+
+🔌 Conexión paso a paso
+1️⃣ Identifica las patas del potenciómetro
+
+Tiene 3 patas:
+
+Izquierda → extremo 1
+
+Centro → cursor (salida variable)
+
+Derecha → extremo 2
+            
+3️⃣ Conexión eléctrica
+
+Sigue este orden:
+
+🔋 Batería (+) →
+➡️ Una pata lateral del potenciómetro
+➡️ Pata central del potenciómetro →
+➡️ Resistencia (330Ω) →
+➡️ Ánodo del LED (pata larga)
+
+🔋 Batería (-) →
+➡️ Cátodo del LED (pata corta)
+
+🔄 ¿Qué pasa al girarlo?
+
+Girar hacia un lado → Más corriente → LED más brillante ✨
+
+Girar hacia el otro lado → Menos corriente → LED más tenue 🌙</span>
         </div>
       </div>
     </div>
@@ -264,7 +313,77 @@
       <div class="divider"></div>
       <div class="desc-zone" style="padding-top:20px;">
         <div class="desc-box">
-          <span class="desc-placeholder">✏️ Escribe aquí la descripción de la simulación en Tinkercad (observaciones, resultados, etc.)</span>
+          <span class="desc-placeholder">🔋 1️⃣ Cuando inicias la simulación
+
+Al presionar Start Simulation:
+
+La batería de 9V empieza a suministrar voltaje constante
+
+Se crea una diferencia de potencial entre el positivo y el negativo
+
+Los electrones comienzan a moverse por el circuito (corriente eléctrica)
+
+👉 Si el circuito está cerrado, el LED enciende.
+
+🎛 2️⃣ Cuando giras el potenciómetro
+
+El potenciómetro cambia su resistencia interna.
+
+Eso provoca:
+
+🔺 Más resistencia → pasa menos corriente → LED más tenue
+
+🔻 Menos resistencia → pasa más corriente → LED más brillante
+
+En términos eléctricos:
+
+𝐼
+=
+𝑉
+𝑅
+I=
+R
+V
+	​
+
+
+Si aumenta la resistencia (R), la corriente (I) disminuye.
+
+💡 3️⃣ Qué ocurre dentro del LED
+
+Cuando la corriente pasa:
+
+Los electrones atraviesan el semiconductor del LED
+
+Se libera energía en forma de luz
+
+Más corriente = más luz
+
+Menos corriente = menos luz
+
+⚠️ 4️⃣ Si no hay resistencia fija
+
+Si el potenciómetro está en su valor mínimo:
+
+La resistencia es muy pequeña
+
+La corriente aumenta demasiado
+
+Tinkercad muestra que el LED se quema
+
+Porque el LED normalmente soporta solo unos 20 mA.
+
+📊 5️⃣ Lo que realmente estás viendo en la simulación
+
+La simulación está mostrando:
+
+Movimiento de corriente
+
+Cambio en intensidad luminosa
+
+Posible sobrecorriente
+
+Variación en valores eléctricos si usas instrumentos virtuales</span>
         </div>
       </div>
     </div>
@@ -288,3 +407,4 @@
   </div>
 </body>
 </html>
+
