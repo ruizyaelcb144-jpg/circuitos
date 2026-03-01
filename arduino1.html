@@ -245,7 +245,72 @@
       </div>
       <div class="desc-zone" style="padding-top:24px;">
         <div class="desc-box">
-          <span class="desc-placeholder">✏️ Escribe aquí la descripción de cómo se elaboró el circuito (materiales, pasos, conexiones, etc.)</span>
+          <span class="desc-placeholder">🔧 Materiales
+
+🟦 Arduino Uno
+
+💡 3 LEDs
+
+🔌 3 resistencias de 220Ω o 330Ω
+
+Protoboard
+
+Cables USB
+
+🔌 Conexión física paso a paso
+📍 Pines que usaremos:
+
+LED 1 → Pin 8
+
+LED 2 → Pin 9
+
+LED 3 → Pin 10
+
+🪛 Cómo conectar cada LED
+
+Para cada LED:
+
+Conecta una resistencia al pin digital (8, 9 o 10).
+
+De la resistencia al ánodo del LED (pata larga).
+
+El cátodo del LED (pata corta) al pin GND del Arduino.
+
+👉 Los tres LEDs comparten el mismo GND.
+
+💻 Código para que parpadeen al mismo tiempo
+int led1 = 8;
+int led2 = 9;
+int led3 = 10;
+
+void setup() {
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, HIGH);
+  delay(500);
+
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  delay(500);
+}
+🧠 ¿Qué está pasando?
+
+pinMode configura los pines como salida.
+
+digitalWrite(HIGH) envía 5V → el LED enciende.
+
+digitalWrite(LOW) corta el voltaje → el LED se apaga.
+
+delay(500) espera medio segundo.
+
+Se repite el ciclo → parpadeo.</span>
         </div>
       </div>
     </div>
@@ -264,7 +329,49 @@
       <div class="divider"></div>
       <div class="desc-zone" style="padding-top:20px;">
         <div class="desc-box">
-          <span class="desc-placeholder">✏️ Escribe aquí la descripción de la simulación en Tinkercad (observaciones, resultados, etc.)</span>
+          <span class="desc-placeholder">🔵 1️⃣ Cuando presionas “Start Simulation”
+
+El Arduino recibe energía (como si estuviera conectado por USB).
+
+El programa (código) se carga automáticamente.
+
+El microcontrolador comienza a ejecutar el setup() una sola vez.
+
+Después empieza a repetir el loop() infinitamente.
+
+💡 2️⃣ Cuando los LEDs parpadean
+
+Si usaste el código donde todos encienden al mismo tiempo:
+
+🔄 Lo que pasa internamente:
+
+El Arduino envía 5V por los pines 8, 9 y 10.
+
+La corriente pasa por la resistencia.
+
+Luego pasa por el LED.
+
+El LED emite luz.
+
+Después de 500 ms, el pin pasa a 0V.
+
+La corriente se detiene.
+
+El LED se apaga.
+
+El proceso se repite.
+
+Es un ciclo continuo porque el loop() nunca se detiene.
+
+⚡ 3️⃣ Qué está controlando el brillo
+
+En Arduino:
+
+HIGH ≈ 5V
+
+LOW ≈ 0V
+
+No estás variando intensidad (como con un potenciómetro), solo estás encendiendo y apagando completamente.</span>
         </div>
       </div>
     </div>
@@ -288,3 +395,4 @@
   </div>
 </body>
 </html>
+
