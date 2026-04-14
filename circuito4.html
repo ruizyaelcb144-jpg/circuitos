@@ -3,396 +3,339 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>4. Circuito con Arduino donde parpadean 3 Leds en Paralelo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <title>4. Circuito con Arduino donde parpadean 3 LEDs en Paralelo</title>
   <style>
-    :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface2: #1c2330;
-      --accent: #f0a500;
-      --accent2: #e05c00;
-      --text: #e6edf3;
-      --muted: #8b949e;
-      --border: #30363d;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Source Sans 3', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 0 0 80px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
     }
 
-    /* ── TOP BAND ── */
-    .top-band {
-      background: linear-gradient(135deg, #1a1000 0%, #0d1117 60%);
-      border-bottom: 3px solid var(--accent);
-      padding: 48px 5vw 36px;
-      position: relative;
+    .card-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 1000px;
+      width: 100%;
       overflow: hidden;
-    }
-    .top-band::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 40px,
-        rgba(240,165,0,0.03) 40px,
-        rgba(240,165,0,0.03) 41px
-      );
-    }
-    .section-number {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: clamp(64px, 12vw, 120px);
-      font-weight: 700;
-      color: rgba(240,165,0,0.10);
-      position: absolute;
-      top: -10px;
-      right: 5vw;
-      line-height: 1;
-      pointer-events: none;
-    }
-    .subtitle {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: clamp(22px, 4vw, 42px);
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 1px;
-      position: relative;
-      z-index: 1;
-    }
-    .subtitle span {
-      color: var(--text);
-    }
-    .subtitle-line {
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      margin-top: 12px;
-    }
-
-    /* ── MAIN LAYOUT ── */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 5vw;
-    }
-
-    /* ── SECTION CARD ── */
-    .section-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-top: 40px;
-      overflow: hidden;
-      animation: fadeUp 0.5s ease both;
-    }
-    .section-card:nth-child(2) { animation-delay: 0.1s; }
-    .section-card:nth-child(3) { animation-delay: 0.2s; }
-    .section-card:nth-child(4) { animation-delay: 0.3s; }
-    .section-card:nth-child(5) { animation-delay: 0.4s; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+      margin: 20px 0;
     }
 
     .card-header {
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
     }
-    .card-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    .card-header h1 { font-size: 2.2em; margin-bottom: 10px; }
+    .card-header p  { font-size: 1.1em; opacity: 0.9; }
+
+    .tabs {
+      display: flex;
+      background: #f8f9fa;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .tab {
+      flex: 1;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+    .tab:hover { background: #e9ecef; }
+    .tab.active { color: #667eea; border-bottom-color: #667eea; background: white; }
+
+    .content { padding: 40px; }
+
+    .circuit-section { display: none; }
+    .circuit-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { color: #667eea; margin-bottom: 20px; }
+
+    .circuit-diagram {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .circuit-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .info-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+    }
+    .info-card h3 { color: #667eea; margin-bottom: 10px; font-size: 1.1em; }
+    .info-card p  { color: #555; line-height: 1.6; font-size: 0.95em; }
+
+    .advantages {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    .advantages h3 { color: #155724; margin-bottom: 10px; }
+    .advantages ul { margin-left: 20px; color: #155724; }
+    .advantages li { margin: 8px 0; line-height: 1.6; }
+
+    .formula {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
+      margin: 20px 0;
+      font-size: 1em;
+      line-height: 1.8;
     }
-    .card-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
+    .formula strong { color: #d63384; }
 
-    /* ── IMAGE PLACEHOLDER ── */
-    .image-zone {
-      padding: 28px 24px;
+    .step-box {
+      background: #e7f3ff;
+      border-left: 5px solid #0066cc;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 20px 0;
     }
-    .img-placeholder {
-      width: 100%;
-      min-height: 260px;
-      background: var(--bg);
-      border: 2px dashed var(--border);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 14px;
-      transition: border-color 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .img-placeholder:hover { border-color: var(--accent); }
-    .img-placeholder svg { opacity: 0.35; }
-    .img-placeholder span { opacity: 0.6; font-style: italic; }
+    .step-box h3 { color: #0066cc; margin-bottom: 12px; }
+    .step-box p, .step-box li { color: #333; line-height: 1.8; }
+    .step-box ul { margin-left: 20px; }
+    .step-box li { margin: 6px 0; }
 
-    /* Real image (if inserted) */
-    .img-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 6px;
+    .code-box {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      line-height: 1.7;
+      overflow-x: auto;
     }
-
-    /* ── DESCRIPTION BOX ── */
-    .desc-zone {
-      padding: 0 24px 28px;
-    }
-    .desc-box {
-      background: var(--bg);
-      border-left: 3px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      padding: 18px 20px;
-      font-size: 15px;
-      line-height: 1.75;
-      color: #c9d1d9;
-      font-weight: 300;
-    }
-    .desc-box strong { color: var(--accent); font-weight: 600; }
-
-    .desc-placeholder {
-      color: var(--muted);
-      font-style: italic;
-      font-size: 14px;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-      margin: 0 24px;
-    }
-
-    /* ── FINAL BADGE ── */
-    .final-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #000;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 16px;
-    }
+    .code-box .kw  { color: #569cd6; }
+    .code-box .fn  { color: #dcdcaa; }
+    .code-box .cm  { color: #6a9955; }
+    .code-box .nm  { color: #9cdcfe; }
+    .code-box .nb  { color: #ce9178; }
   </style>
 </head>
 <body>
+<div class="card-container">
 
-  <!-- ── HEADER ── -->
-  <div class="top-band">
-    <div class="section-number">2</div>
-    <div class="subtitle">
-      4.&nbsp;<span>Circuito Donde Parpadean 3 Leds</span><br>con Arduino UNO
-    </div>
-    <div class="subtitle-line"></div>
+  <div class="card-header">
+    <h1>💡 Circuito 4</h1>
+    <p>Parpadeo de 3 LEDs en Paralelo con Arduino UNO</p>
   </div>
 
-  <div class="container">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('diagrama', event)">⚡ Diagrama</div>
+    <div class="tab" onclick="showTab('elaboracion', event)">🔧 Elaboración</div>
+    <div class="tab" onclick="showTab('tinkercad', event)">💻 Tinkercad</div>
+    <div class="tab" onclick="showTab('practica', event)">📷 Práctica</div>
+  </div>
 
-    <!-- ── CARD 1: Diagrama del circuito ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">⚡</div>
-        <div class="card-title">Diagrama del Circuito</div>
+  <div class="content">
+
+    <!-- DIAGRAMA -->
+    <div id="diagrama" class="circuit-section active">
+      <h2>⚡ Diagrama del Circuito</h2>
+
+      <div class="circuit-diagram">
+        <img src="circuito4.jpeg" alt="Diagrama del circuito 4" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">3 LEDs conectados en paralelo controlados por Arduino UNO</p>
       </div>
-      <div class="image-zone">
-        <div class="img-placeholder">
-          <img src="circuito4.jpeg" alt="Diagrama"/>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>🟦 Arduino UNO</h3>
+          <p>Microcontrolador que envía señales digitales (HIGH/LOW) a los pines 8, 9 y 10.</p>
         </div>
+        <div class="info-card">
+          <h3>💡 3 LEDs</h3>
+          <p>Cada LED conectado a un pin distinto del Arduino, con su propia resistencia de 220Ω–330Ω.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔌 Resistencias</h3>
+          <p>3 resistencias de 220Ω o 330Ω, una por cada LED, para limitar la corriente.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔗 GND Compartido</h3>
+          <p>Los tres LEDs comparten el mismo pin GND del Arduino.</p>
+        </div>
+      </div>
+
+      <div class="formula">
+        <strong>Pines utilizados:</strong><br>
+        • LED 1 → Pin 8<br>
+        • LED 2 → Pin 9<br>
+        • LED 3 → Pin 10<br>
+        • HIGH ≈ 5V (LED enciende) &nbsp;|&nbsp; LOW ≈ 0V (LED apagado)
       </div>
     </div>
 
-    <!-- ── CARD 2: Cómo se elaboró + descripción ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">🔧</div>
-        <div class="card-title">Cómo se Elaboró el Circuito</div>
+    <!-- ELABORACIÓN -->
+    <div id="elaboracion" class="circuit-section">
+      <h2>🔧 Cómo se Elaboró el Circuito</h2>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>🟦 Arduino UNO</h3>
+          <p>Placa de desarrollo con microcontrolador ATmega328P.</p>
+        </div>
+        <div class="info-card">
+          <h3>💡 3 LEDs</h3>
+          <p>Uno por cada pin de salida (8, 9 y 10).</p>
+        </div>
+        <div class="info-card">
+          <h3>🔌 3 Resistencias</h3>
+          <p>220Ω o 330Ω, una por cada LED para protegerlo.</p>
+        </div>
+        <div class="info-card">
+          <h3>🛠️ Otros</h3>
+          <p>Protoboard, cables y cable USB para programar el Arduino.</p>
+        </div>
       </div>
-      <div class="desc-zone" style="padding-top:24px;">
-        <div class="desc-box">
-          <span class="desc-placeholder">🔧 Materiales
 
-🟦 Arduino Uno
+      <div class="step-box">
+        <h3>🪛 Cómo conectar cada LED</h3>
+        <ul>
+          <li>Conecta una resistencia al pin digital (8, 9 o 10).</li>
+          <li>De la resistencia al ánodo del LED (pata larga).</li>
+          <li>El cátodo del LED (pata corta) al pin GND del Arduino.</li>
+          <li>Repite para los 3 LEDs. Los tres comparten el mismo GND.</li>
+        </ul>
+      </div>
 
-💡 3 LEDs
+      <div class="advantages">
+        <h3>✅ ¿Qué hace el código?</h3>
+        <ul>
+          <li><strong>pinMode</strong> configura los pines como salida.</li>
+          <li><strong>digitalWrite(HIGH)</strong> envía 5V → el LED enciende.</li>
+          <li><strong>digitalWrite(LOW)</strong> corta el voltaje → el LED se apaga.</li>
+          <li><strong>delay(500)</strong> espera medio segundo entre estado y estado.</li>
+          <li>El ciclo se repite infinitamente → parpadeo continuo.</li>
+        </ul>
+      </div>
 
-🔌 3 resistencias de 220Ω o 330Ω
-
-Protoboard
-
-Cables USB
-
-🔌 Conexión física paso a paso
-📍 Pines que usaremos:
-
-LED 1 → Pin 8
-
-LED 2 → Pin 9
-
-LED 3 → Pin 10
-
-🪛 Cómo conectar cada LED
-
-Para cada LED:
-
-Conecta una resistencia al pin digital (8, 9 o 10).
-
-De la resistencia al ánodo del LED (pata larga).
-
-El cátodo del LED (pata corta) al pin GND del Arduino.
-
-👉 Los tres LEDs comparten el mismo GND.
-
-💻 Código para que parpadeen al mismo tiempo
-int led1 = 8;
-int led2 = 9;
-int led3 = 10;
-
-void setup() {
-  pinMode(led1, OUTPUT);
-  pinMode(led2, OUTPUT);
-  pinMode(led3, OUTPUT);
+      <div class="code-box">
+<span class="kw">int</span> <span class="nm">led1</span> = 8;<br>
+<span class="kw">int</span> <span class="nm">led2</span> = 9;<br>
+<span class="kw">int</span> <span class="nm">led3</span> = 10;<br>
+<br>
+<span class="kw">void</span> <span class="fn">setup</span>() {<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">led1</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">led2</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">led3</span>, OUTPUT);<br>
+}<br>
+<br>
+<span class="kw">void</span> <span class="fn">loop</span>() {<br>
+&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">led1</span>, HIGH);<br>
+&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">led2</span>, HIGH);<br>
+&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">led3</span>, HIGH);<br>
+&nbsp;&nbsp;<span class="fn">delay</span>(500);<br>
+<br>
+&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">led1</span>, LOW);<br>
+&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">led2</span>, LOW);<br>
+&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">led3</span>, LOW);<br>
+&nbsp;&nbsp;<span class="fn">delay</span>(500);<br>
 }
-
-void loop() {
-  digitalWrite(led1, HIGH);
-  digitalWrite(led2, HIGH);
-  digitalWrite(led3, HIGH);
-  delay(500);
-
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
-  digitalWrite(led3, LOW);
-  delay(500);
-}
-🧠 ¿Qué está pasando?
-
-pinMode configura los pines como salida.
-
-digitalWrite(HIGH) envía 5V → el LED enciende.
-
-digitalWrite(LOW) corta el voltaje → el LED se apaga.
-
-delay(500) espera medio segundo.
-
-Se repite el ciclo → parpadeo.</span>
-        </div>
       </div>
     </div>
 
-    <!-- ── CARD 3: Diagrama en Tinkercad ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">💻</div>
-        <div class="card-title">Simulación en Tinkercad</div>
+    <!-- TINKERCAD -->
+    <div id="tinkercad" class="circuit-section">
+      <h2>💻 Simulación en Tinkercad</h2>
+
+      <div class="circuit-diagram">
+        <img src="tinker4.PNG" alt="Simulación Tinkercad" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">Simulación virtual del circuito con Arduino</p>
       </div>
-      <div class="image-zone">
-        <div class="img-placeholder">
-          <img src="tinker4.PNG" alt="Tinkercad"/> 
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>▶️ Al iniciar simulación</h3>
+          <p>El Arduino recibe energía. Se ejecuta setup() una vez y luego loop() infinitamente.</p>
+        </div>
+        <div class="info-card">
+          <h3>💡 LEDs parpadeando</h3>
+          <p>El Arduino envía 5V por los pines 8, 9 y 10. La corriente pasa por la resistencia y enciende el LED.</p>
+        </div>
+        <div class="info-card">
+          <h3>⏱️ delay(500)</h3>
+          <p>Después de 500ms el pin pasa a 0V, la corriente se detiene y el LED se apaga. Ciclo continuo.</p>
+        </div>
+        <div class="info-card">
+          <h3>⚡ Control de brillo</h3>
+          <p>Solo se encienden y apagan (HIGH/LOW). No se varía intensidad como con un potenciómetro.</p>
         </div>
       </div>
-      <div class="divider"></div>
-      <div class="desc-zone" style="padding-top:20px;">
-        <div class="desc-box">
-          <span class="desc-placeholder">🔵 1️⃣ Cuando presionas “Start Simulation”
 
-El Arduino recibe energía (como si estuviera conectado por USB).
-
-El programa (código) se carga automáticamente.
-
-El microcontrolador comienza a ejecutar el setup() una sola vez.
-
-Después empieza a repetir el loop() infinitamente.
-
-💡 2️⃣ Cuando los LEDs parpadean
-
-Si usaste el código donde todos encienden al mismo tiempo:
-
-🔄 Lo que pasa internamente:
-
-El Arduino envía 5V por los pines 8, 9 y 10.
-
-La corriente pasa por la resistencia.
-
-Luego pasa por el LED.
-
-El LED emite luz.
-
-Después de 500 ms, el pin pasa a 0V.
-
-La corriente se detiene.
-
-El LED se apaga.
-
-El proceso se repite.
-
-Es un ciclo continuo porque el loop() nunca se detiene.
-
-⚡ 3️⃣ Qué está controlando el brillo
-
-En Arduino:
-
-HIGH ≈ 5V
-
-LOW ≈ 0V
-
-No estás variando intensidad (como con un potenciómetro), solo estás encendiendo y apagando completamente.</span>
-        </div>
+      <div class="step-box">
+        <h3>🔄 Ciclo interno de la simulación</h3>
+        <ul>
+          <li>Arduino envía 5V por pines 8, 9 y 10 → LEDs encienden.</li>
+          <li>Después de 500 ms, los pines pasan a 0V → LEDs se apagan.</li>
+          <li>El proceso se repite porque el loop() nunca se detiene.</li>
+          <li>Los tres LEDs parpadean al mismo tiempo de forma sincronizada.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- ── CARD 4: Foto final de la práctica ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">📷</div>
-        <div class="card-title">Foto Final de la Práctica</div>
+    <!-- PRÁCTICA -->
+    <div id="practica" class="circuit-section">
+      <h2>📷 Foto Final de la Práctica</h2>
+
+      <div style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; padding:6px 16px; border-radius:20px; margin-bottom:20px;">
+        ✅ Práctica Realizada
       </div>
-      <div class="image-zone">
-        <div style="margin-bottom:12px;">
-          <span class="final-badge">✅ Práctica Realizada</span>
-        </div>
-        <div class="img-placeholder">
-          <img src="real4.jpeg" alt="Foto final"/> 
-        </div>
+
+      <div class="circuit-diagram">
+        <img src="real4.jpeg" alt="Foto final de la práctica" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">Resultado final del circuito armado</p>
       </div>
     </div>
 
   </div>
+</div>
+
+<script>
+  function showTab(id, event) {
+    document.querySelectorAll('.circuit-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
 </body>
 </html>
-
