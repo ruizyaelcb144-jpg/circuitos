@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maqueta — Control de LEDs con Fotorresistencia</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:  #667eea;
+      --secondary:#764ba2;
+      --ink:      #1a1a2e;
+      --bg:       #f4f4fb;
+      --warm:     #eceaf8;
+      --card:     #ffffff;
+      --border:   #d0cce8;
+      --muted:    #6b6880;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 50px 40px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    }
+    .header-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2em, 5vw, 3.4em);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .header h1 em { font-style: italic; opacity: 0.88; }
+    .header p { font-size: 1.05em; opacity: 0.85; max-width: 580px; line-height: 1.7; }
+
+    .tabs-wrap {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .tabs { display: flex; max-width: 960px; margin: 0 auto; overflow-x: auto; }
+    .tab {
+      flex-shrink: 0;
+      padding: 16px 24px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      border-bottom: 3px solid transparent;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: white; background: rgba(255,255,255,0.08); }
+    .tab.active { color: white; border-bottom-color: white; background: rgba(255,255,255,0.1); }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 50px 24px 80px; }
+
+    .section { display: none; }
+    .section.active { display: block; animation: rise 0.45s ease both; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title { font-family: 'DM Serif Display', serif; font-size: 2em; color: var(--ink); margin-bottom: 6px; }
+    .section-subtitle { color: var(--muted); font-size: 0.95em; margin-bottom: 36px; line-height: 1.6; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 28px 0; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin: 28px 0; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .card-icon { font-size: 1.8em; margin-bottom: 10px; }
+    .card h3 { font-size: 0.95em; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+    .card p  { font-size: 0.88em; color: var(--muted); line-height: 1.65; }
+    .card.accent { border-left: 4px solid var(--primary); }
+    .card.blue   { border-left: 4px solid #4a90d9; }
+    .card.teal   { border-left: 4px solid var(--secondary); }
+
+    .diagram-box {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 28px 0;
+      text-align: center;
+    }
+    .diagram-box img { max-width: 100%; border-radius: 10px; box-shadow: 0 8px 32px rgba(102,126,234,0.18); }
+    .diagram-box .caption { margin-top: 14px; font-size: 0.85em; color: var(--muted); font-style: italic; }
+
+    .highlight { border-radius: 12px; padding: 22px 26px; margin: 22px 0; }
+    .highlight.yellow { background: #fef9ec; border-left: 4px solid #f0a500; }
+    .highlight.green  { background: #ecf7f2; border-left: 4px solid #27ae60; }
+    .highlight.blue   { background: #eef2fb; border-left: 4px solid var(--primary); }
+    .highlight.purple { background: #f5eefb; border-left: 4px solid var(--secondary); }
+    .highlight h3 { font-size: 0.95em; font-weight: 600; margin-bottom: 10px; color: var(--ink); }
+    .highlight p, .highlight li { font-size: 0.9em; color: #444; line-height: 1.75; }
+    .highlight ul { margin-left: 18px; }
+    .highlight li { margin: 5px 0; }
+
+    .code-box {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 12px;
+      padding: 24px 28px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88em;
+      line-height: 1.75;
+      overflow-x: auto;
+      margin: 22px 0;
+      border: 1px solid #333;
+    }
+    .code-box .kw  { color: #569cd6; }
+    .code-box .fn  { color: #dcdcaa; }
+    .code-box .cm  { color: #6a9955; }
+    .code-box .nm  { color: #9cdcfe; }
+    .code-box .nb  { color: #ce9178; }
+    .code-box .num { color: #b5cea8; }
+
+    .steps { margin: 28px 0; }
+    .step { display: flex; gap: 18px; margin-bottom: 22px; align-items: flex-start; }
+    .step-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9em;
+      margin-top: 2px;
+    }
+    .step-body h4 { font-size: 0.97em; font-weight: 600; margin-bottom: 5px; color: var(--ink); }
+    .step-body p  { font-size: 0.88em; color: var(--muted); line-height: 1.7; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+    .formula-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 20px 0; }
+    .formula-pill {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85em;
+      padding: 7px 15px;
+      border-radius: 8px;
+    }
+
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin: 28px 0; }
+    .photo-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .photo-card img { width: 100%; display: block; }
+    .photo-card .photo-label { padding: 12px 16px; font-size: 0.82em; color: var(--muted); font-style: italic; text-align: center; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      font-size: 0.8em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .header { padding: 36px 20px 28px; }
+      .content { padding: 32px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="badge">🔆 Práctica Arduino</div>
+    <h1>Control de LEDs con<br><em>Fotorresistencia</em></h1>
+    <p>Circuito inteligente que detecta la luminosidad del entorno y enciende o apaga automáticamente 6 LEDs en paralelo — aplicado en una maqueta de galería de arte.</p>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('teoria', event)">📡 Teoría</div>
+    <div class="tab" onclick="showTab('diagrama', event)">⚡ Diagrama</div>
+    <div class="tab" onclick="showTab('codigo', event)">💻 Código</div>
+    <div class="tab" onclick="showTab('maqueta', event)">🏛️ Maqueta</div>
+    <div class="tab" onclick="showTab('galeria', event)">📷 Galería</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- TEORÍA -->
+  <div id="teoria" class="section active">
+    <div class="section-title">¿Cómo funciona el circuito?</div>
+    <p class="section-subtitle">El sistema combina una fotorresistencia (LDR) con Arduino para automatizar el encendido de 6 LEDs según la cantidad de luz ambiental detectada.</p>
+
+    <div class="grid-3">
+      <div class="card accent">
+        <div class="card-icon">🌡️</div>
+        <h3>Fotorresistencia (LDR)</h3>
+        <p>Sensor pasivo cuya resistencia varía según la luz incidente. Con mucha luz su resistencia cae (~100Ω–1kΩ); en oscuridad sube (~1MΩ). Trabaja en un divisor de voltaje para generar una señal analógica leída por Arduino en el pin A0.</p>
+      </div>
+      <div class="card blue">
+        <div class="card-icon">🟦</div>
+        <h3>Arduino UNO</h3>
+        <p>Actúa como cerebro del circuito. Lee el valor analógico del pin A0 (0–1023) y lo compara con el umbral definido en el código. Si hay poca luz, activa los pines digitales 8–13 que controlan los LEDs.</p>
+      </div>
+      <div class="card teal">
+        <div class="card-icon">💡</div>
+        <h3>6 LEDs en Paralelo</h3>
+        <p>Todos reciben el mismo voltaje (5V). Cada uno lleva su propia resistencia de 220Ω–330Ω. Si uno falla, los demás continúan funcionando. Todos se encienden o apagan en simultáneo según la lectura de la LDR.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-title" style="font-size:1.4em;">Lógica de operación</div><br>
+    <div class="grid-2">
+      <div class="highlight yellow">
+        <h3>🌞 Con luz brillante</h3>
+        <ul>
+          <li>La LDR baja su resistencia.</li>
+          <li>El voltaje en A0 es <strong>alto</strong> (cercano a 5V).</li>
+          <li>Arduino lee un valor analógico <strong>elevado</strong> (≥ 500).</li>
+          <li>Los pines 8–13 permanecen en <strong>LOW</strong> → LEDs <strong>apagados</strong>.</li>
+        </ul>
+      </div>
+      <div class="highlight green">
+        <h3>🌙 Con poca luz</h3>
+        <ul>
+          <li>La LDR sube su resistencia.</li>
+          <li>El voltaje en A0 es <strong>bajo</strong> (cercano a 0V).</li>
+          <li>Arduino lee un valor analógico <strong>reducido</strong> (&lt; 500).</li>
+          <li>Los pines 8–13 pasan a <strong>HIGH</strong> → LEDs <strong>encendidos</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight blue">
+      <h3>💡 ¿Por qué conectar los LEDs en paralelo y no en serie?</h3>
+      <p>En paralelo, cada LED recibe 5V independientemente. Si uno se daña, los demás siguen funcionando. En serie, el voltaje se divide entre todos (5V / 6 = ~0.83V, insuficiente para encenderlos) y si uno falla, el circuito completo se interrumpe.</p>
+    </div>
+
+    <hr class="divider">
+    <div class="section-title" style="font-size:1.4em;">Componentes necesarios</div>
+    <div class="formula-row">
+      <span class="formula-pill">1 × Arduino UNO</span>
+      <span class="formula-pill">1 × LDR (fotorresistencia)</span>
+      <span class="formula-pill">6 × LEDs rojos</span>
+      <span class="formula-pill">6 × R 220Ω (LEDs)</span>
+      <span class="formula-pill">1 × R 10kΩ (divisor LDR)</span>
+      <span class="formula-pill">1 × Protoboard</span>
+      <span class="formula-pill">Cables y USB</span>
+    </div>
+  </div>
+
+  <!-- DIAGRAMA -->
+  <div id="diagrama" class="section">
+    <div class="section-title">Diagrama del Circuito</div>
+    <p class="section-subtitle">Esquema de conexión de la LDR, el Arduino y los 6 LEDs en paralelo sobre protoboard.</p>
+
+    <div class="diagram-box">
+      <img src="diagrama.png" alt="Diagrama del circuito con fotorresistencia y 6 LEDs">
+      <p class="caption">Diagrama Tinkercad: LDR en divisor de voltaje → A0 · 6 LEDs con resistencias → pines 8–13</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="highlight yellow">
+        <h3>🔌 Conexión de la LDR (divisor de voltaje)</h3>
+        <ul>
+          <li>Un extremo de la LDR → <strong>5V</strong></li>
+          <li>Otro extremo → unión con resistencia de <strong>10kΩ</strong> → GND</li>
+          <li>El punto medio (unión LDR + R10k) → pin <strong>A0</strong> del Arduino</li>
+          <li>Este voltaje variable es la "señal" que lee Arduino</li>
+        </ul>
+      </div>
+      <div class="highlight blue">
+        <h3>💡 Conexión de los 6 LEDs</h3>
+        <ul>
+          <li>Pin digital (8, 9, 10, 11, 12 ó 13) → <strong>Resistencia 220Ω</strong></li>
+          <li>Resistencia → <strong>ánodo</strong> del LED (pata larga)</li>
+          <li><strong>Cátodo</strong> del LED (pata corta) → <strong>GND</strong></li>
+          <li>Todos comparten el mismo GND del Arduino</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight green">
+      <h3>⚡ Cálculo de resistencia para los LEDs</h3>
+      <p>
+        Con 5V de fuente, caída de voltaje del LED ≈ 2V y corriente deseada de 10–15mA:<br><br>
+        <strong>R = (Vfuente − VLED) / I = (5V − 2V) / 0.015A = 200Ω</strong><br><br>
+        Se usa 220Ω (valor estándar más cercano) para proteger el LED sin reducir demasiado su brillo.
+      </p>
+    </div>
+  </div>
+
+  <!-- CÓDIGO -->
+  <div id="codigo" class="section">
+    <div class="section-title">Código Arduino</div>
+    <p class="section-subtitle">El sketch lee el valor analógico de la LDR y decide si encender o apagar los 6 LEDs automáticamente según el umbral definido.</p>
+
+    <div class="code-box">
+<span class="kw">int</span> <span class="nm">ledrojo</span>  = <span class="num">13</span>;<br>
+<span class="kw">int</span> <span class="nm">ledrojo2</span> = <span class="num">12</span>;<br>
+<span class="kw">int</span> <span class="nm">ledrojo3</span> = <span class="num">11</span>;<br>
+<span class="kw">int</span> <span class="nm">ledrojo4</span> = <span class="num">10</span>;<br>
+<span class="kw">int</span> <span class="nm">ledrojo5</span> = <span class="num">9</span>;<br>
+<span class="kw">int</span> <span class="nm">ledrojo6</span> = <span class="num">8</span>;<br>
+<span class="kw">int</span> <span class="nm">lecturasensor</span>;<br>
+<span class="kw">int</span> <span class="nm">valorLuz</span> = <span class="num">0</span>;<br>
+<span class="kw">int</span> <span class="nm">umbral</span> = <span class="num">500</span>; <span class="cm">// Ajusta según tu entorno</span><br>
+<br>
+<span class="kw">void</span> <span class="fn">setup</span>() {<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">ledrojo</span>,  OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">ledrojo2</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">ledrojo3</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">ledrojo4</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">ledrojo5</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">pinMode</span>(<span class="nm">ledrojo6</span>, OUTPUT);<br>
+&nbsp;&nbsp;<span class="fn">Serial</span>.begin(<span class="num">9600</span>);<br>
+}<br>
+<br>
+<span class="kw">void</span> <span class="fn">loop</span>() {<br>
+&nbsp;&nbsp;<span class="nm">lecturasensor</span> = <span class="fn">analogRead</span>(A0);<br>
+&nbsp;&nbsp;<span class="fn">Serial</span>.println(<span class="nm">lecturasensor</span>);<br>
+<br>
+&nbsp;&nbsp;<span class="kw">if</span> (<span class="nm">lecturasensor</span> &lt; <span class="nm">umbral</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Oscuro → LEDs encendidos</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo</span>,  HIGH);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo2</span>, HIGH);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo3</span>, HIGH);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo4</span>, HIGH);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo5</span>, HIGH);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo6</span>, HIGH);<br>
+&nbsp;&nbsp;} <span class="kw">else</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm">// Luz → LEDs apagados</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo</span>,  LOW);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo2</span>, LOW);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo3</span>, LOW);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo4</span>, LOW);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo5</span>, LOW);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">digitalWrite</span>(<span class="nm">ledrojo6</span>, LOW);<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="fn">delay</span>(<span class="num">500</span>);<br>
+}
+    </div>
+
+    <div class="grid-2">
+      <div class="highlight yellow">
+        <h3>🔧 Funciones clave explicadas</h3>
+        <ul>
+          <li><strong>lecturasensor</strong> — almacena el valor analógico 0–1023 leído desde A0.</li>
+          <li><strong>umbral = 500</strong> — punto de corte entre "oscuro" e "iluminado". Ajustar según el ambiente.</li>
+          <li><strong>digitalWrite(HIGH)</strong> — envía 5V al pin → LED enciende.</li>
+          <li><strong>digitalWrite(LOW)</strong> — corta el voltaje → LED se apaga.</li>
+          <li><strong>Serial.println()</strong> — imprime el valor en el Monitor Serial para calibración en tiempo real.</li>
+          <li><strong>delay(500)</strong> — espera 500ms antes de volver a leer para evitar lecturas erráticas.</li>
+        </ul>
+      </div>
+      <div class="highlight green">
+        <h3>📈 ¿Cómo calibrar el UMBRAL?</h3>
+        <ul>
+          <li>Abre el Monitor Serial a 9600 baudios.</li>
+          <li>Observa el valor con la iluminación normal del aula.</li>
+          <li>Cubre la LDR con la mano y anota el valor mínimo obtenido.</li>
+          <li>Pon el UMBRAL entre ambos valores para distinguir "oscuro" de "iluminado".</li>
+          <li>Un valor de <strong>500</strong> suele funcionar bien en interiores. Si los LEDs se quedan siempre encendidos, bájalo; si no encienden, súbelo.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight purple">
+      <h3>🔢 Pines utilizados</h3>
+      <p>
+        • <strong>ledrojo</strong> → Pin 13 &nbsp;|&nbsp; <strong>ledrojo2</strong> → Pin 12 &nbsp;|&nbsp; <strong>ledrojo3</strong> → Pin 11<br><br>
+        • <strong>ledrojo4</strong> → Pin 10 &nbsp;|&nbsp; <strong>ledrojo5</strong> → Pin 9 &nbsp;&nbsp;|&nbsp; <strong>ledrojo6</strong> → Pin 8<br><br>
+        • <strong>LDR</strong> → Pin A0 (analógico) &nbsp;|&nbsp; GND compartido entre todos los LEDs
+      </p>
+    </div>
+  </div>
+
+  <!-- MAQUETA -->
+  <div id="maqueta" class="section">
+    <div class="section-title">Construcción de la Maqueta</div>
+    <p class="section-subtitle">Galería de arte en miniatura donde los LEDs controlados por la fotorresistencia simulan la iluminación automatizada de una sala de exposiciones.</p>
+
+    <div class="highlight blue">
+      <h3>🎨 Concepto del proyecto</h3>
+      <p>Se diseñó una galería minimalista dentro de un espacio reducido. Las luces LED integradas replican el sistema de iluminación inteligente de una galería real: se activan automáticamente cuando la sala se oscurece, recreando la experiencia de una exposición de arte con control ambiental de iluminación.</p>
+    </div>
+
+    <hr class="divider">
+    <div class="section-title" style="font-size:1.4em;">Proceso de construcción</div><br>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Estructura principal</h4>
+          <p>Se construyó la caja de la galería con <strong>cartón rígido y arauco</strong> pintado en tonos oscuros y amaderados para una estética refinada. El techo se dejó en color blanco para reflejar mejor la luz de los LEDs hacia el interior. Las paredes y el piso se aseguraron con pegamento y refuerzos internos de cartón.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Pedestales y esculturas</h4>
+          <p>Se fabricaron pequeños pedestales con <strong>papel cascarón</strong>, doblado y pegado para crear formas cúbicas firmes. Sobre ellos se colocaron esculturas modeladas con <strong>jabón y materiales reciclados</strong>, dando al espacio un carácter artístico y artesanal auténtico.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Instalación de iluminación LED</h4>
+          <p>Los LEDs se instalaron en el techo de la maqueta, distribuidos estratégicamente para crear <strong>puntos de atención</strong> sobre cada pieza expuesta y dispersar luz uniforme en todas las áreas. Los cables se ocultaron dentro de las paredes para mantener la estética limpia.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Obras en las paredes</h4>
+          <p>Las pinturas fueron <strong>impresas en papel fotográfico</strong> y pegadas en marcos pequeños sobre las paredes de la galería para simular cuadros reales. La selección incluye obras de distintos estilos para enriquecer la exposición temáticamente.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Detalles decorativos</h4>
+          <p>Se añadieron <strong>plantas artificiales</strong> distribuidas en el piso y un <strong>frasco decorativo con materiales naturales</strong>, aportando un contraste orgánico al espacio oscuro. Estos elementos equilibran la frialdad de las paredes negras con texturas y colores cálidos.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Integración del circuito</h4>
+          <p>El Arduino y la protoboard se colocaron en la parte trasera o inferior de la maqueta. La fotorresistencia se posicionó en un punto donde puede detectar la luz exterior de la sala. Al cubrir o descubrir la galería, los LEDs del techo responden automáticamente.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight green">
+      <h3>✅ Resultado obtenido</h3>
+      <p>La maqueta logra una simulación fiel de una galería de arte con iluminación automatizada. Cuando el ambiente se oscurece, los LEDs del techo se encienden de forma autónoma, destacando las obras y esculturas. El proyecto combina con éxito electrónica, programación y diseño artesanal.</p>
+    </div>
+  </div>
+
+  <!-- GALERÍA -->
+  <div id="galeria" class="section">
+    <div class="section-title">Evidencias del Proyecto</div>
+    <p class="section-subtitle">Fotografías del diagrama de conexión y la maqueta terminada.</p>
+
+    <div class="status-badge">✅ Práctica Realizada</div>
+
+    <div class="photo-grid">
+      <div class="photo-card">
+        <img src="diagrama.png" alt="Diagrama del circuito">
+        <div class="photo-label">Diagrama de conexión — LDR + 6 LEDs en paralelo con Arduino UNO</div>
+      </div>
+      <div class="photo-card">
+        <img src="maqueta.jpeg" alt="Maqueta terminada">
+        <div class="photo-label">Maqueta final — Galería de arte con iluminación LED automatizada</div>
+      </div>
+    </div>
+
+    <div class="highlight yellow">
+      <h3>📋 Conclusiones de la práctica</h3>
+      <ul>
+        <li>La fotorresistencia es un sensor sencillo pero muy efectivo para automatizar sistemas de iluminación.</li>
+        <li>El divisor de voltaje es fundamental para convertir la variación de resistencia en una señal analógica leíble por Arduino.</li>
+        <li>Conectar los LEDs en paralelo garantiza uniformidad de brillo e independencia entre ellos.</li>
+        <li>El valor del UMBRAL debe calibrarse según el entorno específico donde se usa el circuito.</li>
+        <li>Este principio se aplica en sistemas reales como sensores crepusculares, luces de estacionamiento y alumbrado público automático.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showTab(id, event) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
