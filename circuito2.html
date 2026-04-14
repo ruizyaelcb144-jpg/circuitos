@@ -4,393 +4,346 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>2. Circuito Paralelo y Serie con Interruptores</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface2: #1c2330;
-      --accent: #f0a500;
-      --accent2: #e05c00;
-      --text: #e6edf3;
-      --muted: #8b949e;
-      --border: #30363d;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Source Sans 3', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 0 0 80px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
     }
 
-    /* ── TOP BAND ── */
-    .top-band {
-      background: linear-gradient(135deg, #1a1000 0%, #0d1117 60%);
-      border-bottom: 3px solid var(--accent);
-      padding: 48px 5vw 36px;
-      position: relative;
+    .card-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 1000px;
+      width: 100%;
       overflow: hidden;
-    }
-    .top-band::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 40px,
-        rgba(240,165,0,0.03) 40px,
-        rgba(240,165,0,0.03) 41px
-      );
-    }
-    .section-number {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: clamp(64px, 12vw, 120px);
-      font-weight: 700;
-      color: rgba(240,165,0,0.10);
-      position: absolute;
-      top: -10px;
-      right: 5vw;
-      line-height: 1;
-      pointer-events: none;
-    }
-    .subtitle {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: clamp(22px, 4vw, 42px);
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 1px;
-      position: relative;
-      z-index: 1;
-    }
-    .subtitle span {
-      color: var(--text);
-    }
-    .subtitle-line {
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      margin-top: 12px;
-    }
-
-    /* ── MAIN LAYOUT ── */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 5vw;
-    }
-
-    /* ── SECTION CARD ── */
-    .section-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-top: 40px;
-      overflow: hidden;
-      animation: fadeUp 0.5s ease both;
-    }
-    .section-card:nth-child(2) { animation-delay: 0.1s; }
-    .section-card:nth-child(3) { animation-delay: 0.2s; }
-    .section-card:nth-child(4) { animation-delay: 0.3s; }
-    .section-card:nth-child(5) { animation-delay: 0.4s; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+      margin: 20px 0;
     }
 
     .card-header {
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
     }
-    .card-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    .card-header h1 { font-size: 2.2em; margin-bottom: 10px; }
+    .card-header p  { font-size: 1.1em; opacity: 0.9; }
+
+    .tabs {
+      display: flex;
+      background: #f8f9fa;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .tab {
+      flex: 1;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+    .tab:hover { background: #e9ecef; }
+    .tab.active { color: #667eea; border-bottom-color: #667eea; background: white; }
+
+    .content { padding: 40px; }
+
+    .circuit-section { display: none; }
+    .circuit-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { color: #667eea; margin-bottom: 20px; }
+
+    .circuit-diagram {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .circuit-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .info-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+    }
+    .info-card h3 { color: #667eea; margin-bottom: 10px; font-size: 1.1em; }
+    .info-card p  { color: #555; line-height: 1.6; font-size: 0.95em; }
+
+    .advantages {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    .advantages h3 { color: #155724; margin-bottom: 10px; }
+    .advantages ul { margin-left: 20px; color: #155724; }
+    .advantages li { margin: 8px 0; line-height: 1.6; }
+
+    .formula {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
+      margin: 20px 0;
+      font-size: 1em;
+      line-height: 1.8;
     }
-    .card-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
+    .formula strong { color: #d63384; }
 
-    /* ── IMAGE PLACEHOLDER ── */
-    .image-zone {
-      padding: 28px 24px;
+    .step-box {
+      background: #e7f3ff;
+      border-left: 5px solid #0066cc;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 20px 0;
     }
-    .img-placeholder {
-      width: 100%;
-      min-height: 260px;
-      background: var(--bg);
-      border: 2px dashed var(--border);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 14px;
-      transition: border-color 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .img-placeholder:hover { border-color: var(--accent); }
-    .img-placeholder svg { opacity: 0.35; }
-    .img-placeholder span { opacity: 0.6; font-style: italic; }
-
-    /* Real image (if inserted) */
-    .img-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 6px;
-    }
-
-    /* ── DESCRIPTION BOX ── */
-    .desc-zone {
-      padding: 0 24px 28px;
-    }
-    .desc-box {
-      background: var(--bg);
-      border-left: 3px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      padding: 18px 20px;
-      font-size: 15px;
-      line-height: 1.75;
-      color: #c9d1d9;
-      font-weight: 300;
-    }
-    .desc-box strong { color: var(--accent); font-weight: 600; }
-
-    .desc-placeholder {
-      color: var(--muted);
-      font-style: italic;
-      font-size: 14px;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-      margin: 0 24px;
-    }
-
-    /* ── FINAL BADGE ── */
-    .final-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #000;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 16px;
-    }
+    .step-box h3 { color: #0066cc; margin-bottom: 12px; }
+    .step-box p, .step-box li { color: #333; line-height: 1.8; }
+    .step-box ul { margin-left: 20px; }
+    .step-box li { margin: 6px 0; }
   </style>
 </head>
 <body>
+<div class="card-container">
 
-  <!-- ── HEADER ── -->
-  <div class="top-band">
-    <div class="section-number">2</div>
-    <div class="subtitle">
-      2.&nbsp;<span>Circuito Paralelo y Serie</span><br>con Interruptores
-    </div>
-    <div class="subtitle-line"></div>
+  <div class="card-header">
+    <h1>⚡ Circuito 2</h1>
+    <p>Circuito Paralelo y Serie con Interruptores</p>
   </div>
 
-  <div class="container">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('serie', event)">🔴 Serie con Interruptor</div>
+    <div class="tab" onclick="showTab('paralelo', event)">🔵 Paralelo con Interruptor</div>
+    <div class="tab" onclick="showTab('tinkercad', event)">💻 Tinkercad</div>
+    <div class="tab" onclick="showTab('practica', event)">📷 Práctica</div>
+  </div>
 
-    <!-- ── CARD 1: Diagrama del circuito ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">⚡</div>
-        <div class="card-title">Diagrama del Circuito</div>
+  <div class="content">
+
+    <!-- SERIE -->
+    <div id="serie" class="circuit-section active">
+      <h2>🔴 Circuito en Serie con Interruptor</h2>
+
+      <div class="circuit-diagram">
+        <img src="circuito2.PNG" alt="Diagrama circuito serie" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">Corriente fluye por un solo camino</p>
       </div>
-      <div class="image-zone">
-        <div class="img-placeholder">
-          <img src="circuito2.PNG" alt="Diagrama"/>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>🔋 Materiales</h3>
+          <p>Batería 9V, 2 LEDs, 2 resistencias 330Ω, interruptor, protoboard y cables.</p>
         </div>
+        <div class="info-card">
+          <h3>⚡ Corriente</h3>
+          <p>La misma corriente pasa por todos los componentes en un solo camino continuo.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔘 Interruptor</h3>
+          <p>Abierto → sin corriente, LEDs apagados. Cerrado → corriente fluye, ambos encienden.</p>
+        </div>
+        <div class="info-card">
+          <h3>⚠️ Dependencia</h3>
+          <p>Si un LED se desconecta, ambos se apagan porque el circuito se interrumpe.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <h3>🔌 Conexión paso a paso</h3>
+        <ul>
+          <li>Conecta el positivo de la batería a una pata del interruptor.</li>
+          <li>De la otra pata del interruptor ve a una resistencia (330Ω).</li>
+          <li>De la resistencia al ánodo del LED 1 (pata larga).</li>
+          <li>Del cátodo del LED 1 al ánodo del LED 2.</li>
+          <li>Del cátodo del LED 2 al negativo de la batería.</li>
+        </ul>
+      </div>
+
+      <div class="advantages">
+        <h3>✅ Ventajas</h3>
+        <ul>
+          <li>Simplicidad de conexión y menos cableado.</li>
+          <li>Fácil detección de fallas: si algo falla, todo se apaga.</li>
+          <li>Útil para interruptores de seguridad.</li>
+        </ul>
+      </div>
+
+      <div class="advantages" style="background:#f8d7da; border-color:#dc3545;">
+        <h3 style="color:#721c24;">⚠️ Desventajas</h3>
+        <ul style="color:#721c24;">
+          <li>Si un componente falla, todo el circuito deja de funcionar.</li>
+          <li>No se pueden controlar los LEDs individualmente.</li>
+          <li>La resistencia total aumenta con cada componente.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- ── CARD 2: Cómo se elaboró + descripción ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">🔧</div>
-        <div class="card-title">Cómo se Elaboró el Circuito</div>
+    <!-- PARALELO -->
+    <div id="paralelo" class="circuit-section">
+      <h2>🔵 Circuito en Paralelo con Interruptor</h2>
+
+      <div class="circuit-diagram">
+        <img src="circuito2.PNG" alt="Diagrama circuito paralelo" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">La corriente se divide en múltiples caminos</p>
       </div>
-      <div class="desc-zone" style="padding-top:24px;">
-        <div class="desc-box">
-          <span class="desc-placeholder">🔋 Batería de 9V
 
-🔘 Interruptor
+      <div class="formula">
+        <strong>Fórmulas clave:</strong><br>
+        • Resistencia Total: 1/R<sub>total</sub> = 1/R₁ + 1/R₂<br>
+        • Corriente Total: I<sub>total</sub> = I₁ + I₂<br>
+        • Voltaje: V = V₁ = V₂ (mismo en ambas ramas)
+      </div>
 
-💡 2 LEDs
-
-🔌 2 resistencias (330Ω recomendadas)
-
-Protoboard y cables
-
-⚠️ Siempre usa resistencia para cada LED.
-
-🔴 1️⃣ Circuito en SERIE con interruptor
-🔌 Conexión paso a paso
-
-Conecta el positivo de la batería a una pata del interruptor.
-
-De la otra pata del interruptor ve a una resistencia (330Ω).
-
-De la resistencia al ánodo del LED 1 (pata larga).
-
-Del cátodo del LED 1 al ánodo del LED 2.
-
-Del cátodo del LED 2 al negativo de la batería.
-
-🧠 ¿Qué pasa físicamente?
-
-🔘 Interruptor abierto → no hay corriente → LEDs apagados
-
-🔘 Interruptor cerrado → corriente fluye por un solo camino → ambos encienden
-
-Si un LED se desconecta → ambos se apagan
-
-🔵 2️⃣ Circuito en PARALELO con interruptor
-🔌 Conexión paso a paso
-
-Positivo de batería → interruptor.
-
-Del interruptor saca un cable que se divide en dos ramas.
-
-Rama 1:
-
-Resistencia → ánodo LED 1 → cátodo al negativo.
-
-Rama 2:
-
-Resistencia → ánodo LED 2 → cátodo al negativo.
-
-🧠 ¿Qué pasa físicamente?
-
-🔘 Interruptor abierto → todo apagado
-
-🔘 Interruptor cerrado → cada LED recibe 9V
-
-Si un LED se quema → el otro sigue encendido</span>
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>🔋 Materiales</h3>
+          <p>Batería 9V, 2 LEDs, 2 resistencias 330Ω, interruptor, protoboard y cables.</p>
         </div>
+        <div class="info-card">
+          <h3>⚡ Voltaje</h3>
+          <p>El voltaje completo (9V) llega a cada rama de forma independiente.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔘 Interruptor</h3>
+          <p>Abierto → todo apagado. Cerrado → cada LED recibe 9V y enciende.</p>
+        </div>
+        <div class="info-card">
+          <h3>💪 Independencia</h3>
+          <p>Si un LED se quema, el otro sigue encendido porque cada rama es independiente.</p>
+        </div>
+      </div>
+
+      <div class="step-box">
+        <h3>🔌 Conexión paso a paso</h3>
+        <ul>
+          <li>Positivo de batería → interruptor.</li>
+          <li>Del interruptor saca un cable que se divide en dos ramas.</li>
+          <li><strong>Rama 1:</strong> Resistencia → ánodo LED 1 → cátodo al negativo.</li>
+          <li><strong>Rama 2:</strong> Resistencia → ánodo LED 2 → cátodo al negativo.</li>
+        </ul>
+      </div>
+
+      <div class="advantages">
+        <h3>✅ Ventajas y Aplicaciones</h3>
+        <ul>
+          <li><strong>Independencia:</strong> Cada LED funciona de forma independiente.</li>
+          <li><strong>Mismo voltaje:</strong> Todos reciben el voltaje completo.</li>
+          <li><strong>Redundancia:</strong> Si un LED falla, el otro sigue funcionando.</li>
+          <li><strong>Aplicaciones:</strong> Instalaciones eléctricas domésticas, iluminación.</li>
+        </ul>
+      </div>
+
+      <div class="advantages" style="background:#f8d7da; border-color:#dc3545;">
+        <h3 style="color:#721c24;">⚠️ Desventajas</h3>
+        <ul style="color:#721c24;">
+          <li>Requiere más cables que un circuito en serie.</li>
+          <li>Instalación más compleja.</li>
+          <li>Mayor consumo de corriente total.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- ── CARD 3: Diagrama en Tinkercad ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">💻</div>
-        <div class="card-title">Simulación en Tinkercad</div>
+    <!-- TINKERCAD -->
+    <div id="tinkercad" class="circuit-section">
+      <h2>💻 Simulación en Tinkercad</h2>
+
+      <div class="circuit-diagram">
+        <img src="tinker2.PNG" alt="Simulación Tinkercad" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">Simulación virtual del circuito</p>
       </div>
-      <div class="image-zone">
-        <div class="img-placeholder">
-          <img src="tinker2.PNG" alt="Tinkercad"/> 
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>🔴 Serie — Interruptor ABIERTO</h3>
+          <p>El circuito está interrumpido. No hay corriente. Ningún LED enciende.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔴 Serie — Interruptor CERRADO</h3>
+          <p>El circuito se completa. La misma corriente pasa por ambos LEDs. Los dos encienden al mismo tiempo.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔵 Paralelo — Interruptor ABIERTO</h3>
+          <p>No hay corriente. Todos los LEDs están apagados.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔵 Paralelo — Interruptor CERRADO</h3>
+          <p>El voltaje completo llega a cada rama. Ambos LEDs encienden con el mismo brillo.</p>
         </div>
       </div>
-      <div class="divider"></div>
-      <div class="desc-zone" style="padding-top:20px;">
-        <div class="desc-box">
-          <span class="desc-placeholder">🔴 1️⃣ Circuito en SERIE con interruptor
-🔌 Cómo está conectado:
 
-Batería → Interruptor → LED 1 → LED 2 → Regresa a batería
+      <div class="step-box">
+        <h3>⚡ Características en la simulación — Serie</h3>
+        <ul>
+          <li>La corriente es la misma en todos los componentes.</li>
+          <li>El voltaje se divide entre los LEDs → pueden brillar menos.</li>
+          <li>Si un LED se quema → todos se apagan.</li>
+        </ul>
+      </div>
 
-🧠 ¿Qué pasa en la simulación?
-🔘 Interruptor ABIERTO
-
-El circuito está interrumpido.
-
-No hay corriente.
-
-Ningún LED enciende.
-
-🔘 Interruptor CERRADO
-
-El circuito se completa.
-
-La misma corriente pasa por ambos LEDs.
-
-Los dos encienden al mismo tiempo.
-
-⚡ Características del circuito en serie
-
-La corriente es la misma en todos los componentes.
-
-El voltaje se divide entre los LEDs.
-
-Si un LED se quema → todos se apagan.
-
-Suelen brillar un poco menos que uno solo.
-
-🔵 2️⃣ Circuito en PARALELO con interruptor
-🔌 Cómo está conectado:
-
-Batería → Interruptor →
-→ Rama 1 (LED 1)
-→ Rama 2 (LED 2)
-
-🧠 ¿Qué pasa en la simulación?
-🔘 Interruptor ABIERTO
-
-No hay corriente.
-
-Todos los LEDs están apagados.
-
-🔘 Interruptor CERRADO
-
-El voltaje completo (9V) llega a cada rama.
-
-Cada LED recibe energía de manera independiente.
-
-Ambos encienden con el mismo brillo (si tienen misma resistencia).</span>
-        </div>
+      <div class="step-box">
+        <h3>⚡ Características en la simulación — Paralelo</h3>
+        <ul>
+          <li>Cada LED recibe energía de manera independiente.</li>
+          <li>Ambos encienden con el mismo brillo (misma resistencia).</li>
+          <li>Si un LED falla, el otro sigue encendido.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- ── CARD 4: Foto final de la práctica ── -->
-    <div class="section-card">
-      <div class="card-header">
-        <div class="card-icon">📷</div>
-        <div class="card-title">Foto Final de la Práctica</div>
+    <!-- PRÁCTICA -->
+    <div id="practica" class="circuit-section">
+      <h2>📷 Foto Final de la Práctica</h2>
+
+      <div style="display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; padding:6px 16px; border-radius:20px; margin-bottom:20px;">
+        ✅ Práctica Realizada
       </div>
-      <div class="image-zone">
-        <div style="margin-bottom:12px;">
-          <span class="final-badge">✅ Práctica Realizada</span>
-        </div>
-        <div class="img-placeholder">
-          <img src="real2.jpeg" alt="Foto final"/> 
-        </div>
+
+      <div class="circuit-diagram">
+        <img src="real2.jpeg" alt="Foto final de la práctica" class="circuit-image">
+        <p style="margin-top:15px; color:#666; font-style:italic;">Resultado final del circuito armado</p>
       </div>
     </div>
 
   </div>
+</div>
+
+<script>
+  function showTab(id, event) {
+    document.querySelectorAll('.circuit-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
 </body>
 </html>
