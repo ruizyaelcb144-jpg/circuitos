@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portafolio de Evidencias - Arduino</title>
+
     <style>
         * {
             margin: 0;
@@ -18,7 +19,6 @@
             color: #333;
         }
 
-        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -27,608 +27,183 @@
             align-items: center;
             text-align: center;
             padding: 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
-            animation: pulse 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            color: #ffffff;
+            font-size: 3rem;
+            color: #fff;
             margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
         }
 
         .hero-subtitle {
-            font-size: 1.3rem;
             color: #f0f0f0;
             margin-bottom: 2rem;
-            font-weight: 300;
         }
 
         .authors {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 3rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            background: rgba(255,255,255,0.2);
+            padding: 1rem 2rem;
+            border-radius: 15px;
         }
 
-        .authors h3 {
-            color: #ffffff;
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-        }
-
-        .author-name {
-            color: #f0f0f0;
-            font-size: 1rem;
-            margin: 0.4rem 0;
-            font-weight: 400;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-10px); }
-            60% { transform: translateX(-50%) translateY(-5px); }
-        }
-
-        .scroll-indicator span {
-            display: block;
-            width: 30px;
-            height: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 25px;
-            position: relative;
-        }
-
-        .scroll-indicator span::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: scrollWheel 2s infinite;
-        }
-
-        @keyframes scrollWheel {
-            0% { opacity: 1; top: 10px; }
-            100% { opacity: 0; top: 30px; }
-        }
-
-        /* Cards Section */
         .cards-section {
-            min-height: 100vh;
-            padding: 4rem 2rem;
-            background: linear-gradient(180deg, #764ba2 0%, #667eea 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 3rem 2rem;
         }
 
         .section-title {
-            font-size: 2.5rem;
-            color: #ffffff;
-            margin-bottom: 3rem;
             text-align: center;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            color: #fff;
+            margin-bottom: 2rem;
         }
 
         .cards-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            max-width: 1200px;
-            width: 100%;
+            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+            gap: 2rem;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 20px;
+            background: #fff;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
-                        0 0 0 1px rgba(0, 255, 255, 0.3);
-        }
-
-        .card:hover::before {
-            opacity: 1;
         }
 
         .card-image {
             width: 100%;
-            height: 250px;
+            height: 200px;
             object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .card:hover .card-image {
-            transform: scale(1.1);
-        }
-
-        .card-image-container {
-            overflow: hidden;
-            position: relative;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .card-content {
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
+            padding: 1.5rem;
         }
 
         .card-title {
-            font-size: 1.6rem;
-            color: #333;
             margin-bottom: 1rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .card-description {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
+            margin-bottom: 1rem;
         }
 
         .card-button {
-            display: inline-block;
-            padding: 0.9rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
             text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .card-button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .card-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6),
-                        0 0 20px rgba(0, 255, 255, 0.3);
-        }
-
-        .card-button span {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Circuit Pattern Background */
-        .circuit-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 0;
-            background-image: 
-                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.1) 50px, rgba(255,255,255,0.1) 51px),
-                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.1) 50px, rgba(255,255,255,0.1) 51px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .authors {
-                padding: 1.2rem 2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .cards-container {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
+            background: #667eea;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
         }
     </style>
 </head>
+
 <body>
-    <div class="circuit-pattern"></div>
-    
-    <!-- Hero Section -->
+
+    <!-- PORTADA -->
     <section class="hero">
-        <div class="hero-content">
-            <h1>Portafolio de Evidencias – Arduino</h1>
-            <p class="hero-subtitle">Explorando el mundo de la electrónica y programación</p>
-            <div class="authors">
-                <h3>Elaborado por:</h3>
-                <p class="author-name">Aguilar Alejo Ian Martín</p>
-                <p class="author-name">Zavala Clemente Iyari</p>
-                <p class="author-name">Ruiz Hernandez Yael</p>
-                <p class="author-name">Vazquez Perez Carlos Daniel</p>
-                <p class="author-name">Moreno Barranco Rodrigo</p>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <span></span>
+        <h1>Portafolio de Evidencias – Arduino</h1>
+        <p class="hero-subtitle">Explorando el mundo de la electrónica</p>
+
+        <div class="authors">
+            <p>Aguilar Alejo Ian Martín</p>
+            <p>Zavala Clemente Iyari</p>
+            <p>Ruiz Hernandez Yael</p>
+            <p>Vazquez Perez Carlos Daniel</p>
+            <p>Moreno Barranco Rodrigo</p>
         </div>
     </section>
 
-    <!-- Cards Section -->
+    <!-- CARDS -->
     <section class="cards-section">
-        <h2 class="section-title">Contenido del Portafolio</h2>
+        <h2 class="section-title">Contenido</h2>
+
         <div class="cards-container">
-            <!-- Card 1: Conceptos Básicos -->
+
+            <!-- Card 1 -->
             <div class="card">
-                <div class="card-image-container">
-                    <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76?w=800&q=80" 
-                         alt="Arduino board with components" 
-                         class="card-image">
-                </div>
+                <img src="https://images.unsplash.com/photo-1553406830-ef2513450d76" class="card-image">
                 <div class="card-content">
-                    <h3 class="card-title">Conceptos Básicos de Arduino</h3>
-                    <p class="card-description">
-                        Descubre los fundamentos de Arduino: desde la estructura de sus placas, 
-                        los pines digitales y analógicos, hasta los primeros pasos en programación 
-                        con el entorno IDE. Aprende sobre variables, funciones y estructuras de control.
-                    </p>
-                    <a href="circuito1y2.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
+                    <h3 class="card-title">Conceptos Básicos</h3>
+                    <p class="card-description">Fundamentos de Arduino</p>
+                    <a href="circuito1y2.html" class="card-button">Ver</a>
                 </div>
             </div>
 
-            <!-- Card 2: Materiales -->
+            <!-- Card 2 -->
             <div class="card">
-                <div class="card-image-container">
-                    <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" class="card-image" style="width:100%;height:250px;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);">
-                      <!-- Breadboard -->
-                      <rect x="60" y="120" width="260" height="150" rx="6" fill="#e8d5a3" stroke="#c4a35a" stroke-width="2"/>
-                      <rect x="72" y="132" width="236" height="50" rx="3" fill="#d4c285"/>
-                      <rect x="72" y="218" width="236" height="40" rx="3" fill="#d4c285"/>
-                      <g fill="#555">
-                        <rect x="82" y="140" width="5" height="5" rx="1"/><rect x="97" y="140" width="5" height="5" rx="1"/><rect x="112" y="140" width="5" height="5" rx="1"/><rect x="127" y="140" width="5" height="5" rx="1"/><rect x="142" y="140" width="5" height="5" rx="1"/><rect x="157" y="140" width="5" height="5" rx="1"/><rect x="172" y="140" width="5" height="5" rx="1"/><rect x="187" y="140" width="5" height="5" rx="1"/><rect x="202" y="140" width="5" height="5" rx="1"/><rect x="217" y="140" width="5" height="5" rx="1"/><rect x="232" y="140" width="5" height="5" rx="1"/><rect x="247" y="140" width="5" height="5" rx="1"/><rect x="262" y="140" width="5" height="5" rx="1"/>
-                        <rect x="82" y="154" width="5" height="5" rx="1"/><rect x="97" y="154" width="5" height="5" rx="1"/><rect x="112" y="154" width="5" height="5" rx="1"/><rect x="127" y="154" width="5" height="5" rx="1"/><rect x="142" y="154" width="5" height="5" rx="1"/><rect x="157" y="154" width="5" height="5" rx="1"/><rect x="172" y="154" width="5" height="5" rx="1"/><rect x="187" y="154" width="5" height="5" rx="1"/>
-                        <rect x="82" y="168" width="5" height="5" rx="1"/><rect x="97" y="168" width="5" height="5" rx="1"/><rect x="112" y="168" width="5" height="5" rx="1"/><rect x="127" y="168" width="5" height="5" rx="1"/>
-                        <rect x="82" y="226" width="5" height="5" rx="1"/><rect x="97" y="226" width="5" height="5" rx="1"/><rect x="112" y="226" width="5" height="5" rx="1"/><rect x="127" y="226" width="5" height="5" rx="1"/><rect x="142" y="226" width="5" height="5" rx="1"/><rect x="157" y="226" width="5" height="5" rx="1"/>
-                        <rect x="82" y="240" width="5" height="5" rx="1"/><rect x="97" y="240" width="5" height="5" rx="1"/>
-                      </g>
-                      <!-- LED rojo -->
-                      <line x1="152" y1="168" x2="152" y2="218" stroke="#ff4444" stroke-width="2"/>
-                      <ellipse cx="152" cy="162" rx="9" ry="12" fill="#ff6666" stroke="#cc0000" stroke-width="1.5"/>
-                      <ellipse cx="152" cy="159" rx="4" ry="4" fill="#ffaaaa" opacity="0.8"/>
-                      <circle cx="152" cy="158" r="14" fill="#ff4444" opacity="0.12"/>
-                      <!-- LED verde -->
-                      <line x1="192" y1="168" x2="192" y2="218" stroke="#44ff44" stroke-width="2"/>
-                      <ellipse cx="192" cy="162" rx="9" ry="12" fill="#44cc44" stroke="#228822" stroke-width="1.5"/>
-                      <ellipse cx="192" cy="159" rx="4" ry="4" fill="#aaffaa" opacity="0.8"/>
-                      <circle cx="192" cy="158" r="14" fill="#44ff44" opacity="0.12"/>
-                      <!-- LED amarillo -->
-                      <line x1="232" y1="168" x2="232" y2="218" stroke="#ffdd00" stroke-width="2"/>
-                      <ellipse cx="232" cy="162" rx="9" ry="12" fill="#ffdd44" stroke="#cc9900" stroke-width="1.5"/>
-                      <ellipse cx="232" cy="159" rx="4" ry="4" fill="#ffee99" opacity="0.8"/>
-                      <circle cx="232" cy="158" r="14" fill="#ffdd00" opacity="0.12"/>
-                      <!-- Resistencia -->
-                      <line x1="82" y1="196" x2="110" y2="196" stroke="#aaa" stroke-width="2"/>
-                      <rect x="100" y="190" width="34" height="12" rx="5" fill="#d4a56a" stroke="#8B6914" stroke-width="1.5"/>
-                      <line x1="104" y1="190" x2="104" y2="202" stroke="#ff8800" stroke-width="2.5"/>
-                      <line x1="111" y1="190" x2="111" y2="202" stroke="#cc8800" stroke-width="2.5"/>
-                      <line x1="118" y1="190" x2="118" y2="202" stroke="#ffd700" stroke-width="2.5"/>
-                      <line x1="125" y1="190" x2="125" y2="202" stroke="#aaaaaa" stroke-width="2.5"/>
-                      <line x1="134" y1="196" x2="152" y2="196" stroke="#aaa" stroke-width="2"/>
-                      <!-- Arduino -->
-                      <rect x="450" y="90" width="200" height="210" rx="8" fill="#006633" stroke="#004d26" stroke-width="2"/>
-                      <rect x="462" y="103" width="176" height="150" rx="4" fill="#007a3d"/>
-                      <!-- Chip -->
-                      <rect x="515" y="140" width="70" height="65" rx="3" fill="#222" stroke="#555" stroke-width="1"/>
-                      <text x="550" y="177" text-anchor="middle" fill="#777" font-size="8" font-family="monospace">ATmega</text>
-                      <text x="550" y="188" text-anchor="middle" fill="#777" font-size="7" font-family="monospace">328P</text>
-                      <!-- Pines izq -->
-                      <g fill="#c0c0c0"><rect x="450" y="108" width="9" height="5" rx="1"/><rect x="450" y="118" width="9" height="5" rx="1"/><rect x="450" y="128" width="9" height="5" rx="1"/><rect x="450" y="138" width="9" height="5" rx="1"/><rect x="450" y="148" width="9" height="5" rx="1"/><rect x="450" y="158" width="9" height="5" rx="1"/><rect x="450" y="168" width="9" height="5" rx="1"/><rect x="450" y="178" width="9" height="5" rx="1"/><rect x="450" y="188" width="9" height="5" rx="1"/></g>
-                      <!-- Pines der -->
-                      <g fill="#c0c0c0"><rect x="641" y="108" width="9" height="5" rx="1"/><rect x="641" y="118" width="9" height="5" rx="1"/><rect x="641" y="128" width="9" height="5" rx="1"/><rect x="641" y="138" width="9" height="5" rx="1"/><rect x="641" y="148" width="9" height="5" rx="1"/><rect x="641" y="158" width="9" height="5" rx="1"/><rect x="641" y="168" width="9" height="5" rx="1"/></g>
-                      <!-- USB -->
-                      <rect x="456" y="290" width="38" height="22" rx="3" fill="#999" stroke="#777" stroke-width="1"/>
-                      <rect x="460" y="294" width="30" height="14" rx="1" fill="#555"/>
-                      <!-- Cables de conexión -->
-                      <path d="M270 160 Q380 80 450 130" stroke="#e74c3c" stroke-width="2" fill="none" stroke-dasharray="6,3"/>
-                      <path d="M270 196 Q380 240 450 190" stroke="#f39c12" stroke-width="2" fill="none" stroke-dasharray="6,3"/>
-                      <!-- Título -->
-                      <text x="400" y="55" text-anchor="middle" fill="#ffffff" font-size="15" font-family="sans-serif" font-weight="bold">Materiales de Arduino</text>
-                      <text x="170" y="355" text-anchor="middle" fill="#aaa" font-size="11" font-family="sans-serif">Protoboard · LEDs · Resistencias · Cables</text>
-                      <text x="550" y="355" text-anchor="middle" fill="#aaa" font-size="11" font-family="sans-serif">Arduino UNO</text>
-                    </svg>
-                </div>
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" class="card-image">
                 <div class="card-content">
-                    <h3 class="card-title">Materiales de Arduino</h3>
-                    <p class="card-description">
-                        Conoce los componentes esenciales para tus proyectos: resistencias, LEDs, 
-                        sensores, motores, breadboards y cables. Explora las especificaciones técnicas 
-                        y aprende a seleccionar los materiales adecuados para cada aplicación.
-                    </p>
-                    <a href="materiales-arduino.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
+                    <h3 class="card-title">Materiales</h3>
+                    <p class="card-description">Componentes de Arduino</p>
+                    <a href="materiales-arduino.html" class="card-button">Ver</a>
                 </div>
             </div>
 
-            <!-- Card 3: Circuitos 1 y 2 -->
+            <!-- Card 3 -->
             <div class="card">
-                <div class="card-image-container">
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" 
-                         alt="Circuit board" 
-                         class="card-image">
-                </div>     
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" class="card-image">
                 <div class="card-content">
                     <h3 class="card-title">Circuitos 1 y 2</h3>
-                    <p class="card-description">
-                       aprende a armar un circuito en paralelo y serie y como estan compuestos con una 
-                       practica y diagramas
-                    </p>
-                    <a href="circuitos_electricos.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
-               </div>
-            </div>
-            
-            <!-- Card 4: Circuitos 2 -->
-            <div class="card">
-                <div class="card-image-container">
-                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" 
-                         alt="Electronic switches and circuits" 
-                         class="card-image">
-               </div>     
-               <div class="card-content">
-                    <h3 class="card-title">Circuitos 2</h3>
-                    <p class="card-description">
-                       aprende a armar un circuito en paralelo y serie con interruptores y como estan compuestos con una 
-                       practica y diagramas
-                    </p>
-                    <a href="circuito2.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
-               </div>
-            </div>
-            
-            <!-- Card 5: Circuitos 3 -->
-            <div class="card">
-                <div class="card-image-container">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80" 
-                         alt="LED and potentiometer circuit" 
-                         class="card-image">
-               </div>     
-               <div class="card-content">
-                    <h3 class="card-title">Circuitos 3</h3>
-                    <p class="card-description">
-                       aprende a armar un circuito para prender un led controlado con un potenciometro y como estan 
-                       compuestos con una practica y diagramas
-                    </p>
-                    <a href="circuito3.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
-               </div>
-            </div>
-            
-            <!-- Card 6: Circuitos 4 -->
-            <div class="card">
-                <div class="card-image-container">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" 
-                         alt="Arduino UNO with LEDs" 
-                         class="card-image">
-               </div>     
-               <div class="card-content">
-                    <h3 class="card-title">Circuito 4</h3>
-                    <p class="card-description">
-                       aprende a armar un circuito para prender tres leds en paralelo con Arduino UNO y como estan 
-                       compuestos con una practica y diagramas
-                    </p>
-                    <a href="circuito4.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
-               </div>
+                    <p class="card-description">Serie y paralelo</p>
+                    <a href="circuitos_electricos.html" class="card-button">Ver</a>
+                </div>
             </div>
 
-            <!-- Card 7: Control de LEDs y Fotoresistencia -->
+            <!-- Card 4 -->
             <div class="card">
-                <div class="card-image-container">
-                    <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" class="card-image" style="width:100%;height:250px;background:linear-gradient(135deg,#0d0d1a 0%,#111133 50%,#0a1628 100%);">
-                      <defs>
-                        <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(100,100,255,0.08)" stroke-width="0.8"/>
-                        </pattern>
-                      </defs>
-                      <rect width="800" height="400" fill="url(#grid)"/>
-                      <!-- Sol -->
-                      <circle cx="680" cy="70" r="38" fill="#ffe066" opacity="0.18"/>
-                      <circle cx="680" cy="70" r="26" fill="#ffe066" opacity="0.35"/>
-                      <circle cx="680" cy="70" r="16" fill="#fff176"/>
-                      <g stroke="#ffe066" stroke-width="2" opacity="0.5">
-                        <line x1="680" y1="35" x2="680" y2="22"/><line x1="680" y1="105" x2="680" y2="118"/>
-                        <line x1="645" y1="70" x2="632" y2="70"/><line x1="715" y1="70" x2="728" y2="70"/>
-                        <line x1="655" y1="45" x2="646" y2="36"/><line x1="705" y1="95" x2="714" y2="104"/>
-                        <line x1="705" y1="45" x2="714" y2="36"/><line x1="655" y1="95" x2="646" y2="104"/>
-                      </g>
-                      <!-- LDR -->
-                      <circle cx="400" cy="130" r="35" fill="#cc9900" stroke="#ffcc00" stroke-width="3"/>
-                      <circle cx="400" cy="130" r="28" fill="#e6ac00"/>
-                      <path d="M400 110 Q415 110 415 125 Q415 140 400 140 Q385 140 385 125 Q385 115 393 112" stroke="#6b3a00" stroke-width="3" fill="none" stroke-linecap="round"/>
-                      <line x1="385" y1="163" x2="375" y2="200" stroke="#ccc" stroke-width="2.5"/>
-                      <line x1="415" y1="163" x2="425" y2="200" stroke="#ccc" stroke-width="2.5"/>
-                      <text x="400" y="185" text-anchor="middle" fill="#ffcc00" font-size="9" font-family="monospace" font-weight="bold">LDR</text>
-                      <!-- Flecha luz -->
-                      <line x1="655" y1="85" x2="435" y2="115" stroke="#ffe066" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
-                      <polygon points="435,115 448,108 445,120" fill="#ffe066" opacity="0.7"/>
-                      <!-- Arduino -->
-                      <rect x="90" y="100" width="180" height="200" rx="8" fill="#006633" stroke="#004d26" stroke-width="2"/>
-                      <rect x="102" y="112" width="156" height="140" rx="4" fill="#007a3d"/>
-                      <rect x="118" y="150" width="60" height="55" rx="3" fill="#222" stroke="#444" stroke-width="1"/>
-                      <text x="148" y="181" text-anchor="middle" fill="#666" font-size="7" font-family="monospace">ATmega</text>
-                      <rect x="96" y="290" width="36" height="20" rx="3" fill="#999" stroke="#777" stroke-width="1"/>
-                      <rect x="100" y="294" width="28" height="12" rx="1" fill="#555"/>
-                      <g fill="#c0c0c0">
-                        <rect x="79" y="115" width="9" height="4" rx="1"/><rect x="79" y="124" width="9" height="4" rx="1"/>
-                        <rect x="79" y="133" width="9" height="4" rx="1"/><rect x="79" y="142" width="9" height="4" rx="1"/>
-                        <rect x="79" y="151" width="9" height="4" rx="1"/><rect x="79" y="160" width="9" height="4" rx="1"/>
-                        <rect x="79" y="169" width="9" height="4" rx="1"/>
-                        <rect x="270" y="115" width="9" height="4" rx="1"/><rect x="270" y="124" width="9" height="4" rx="1"/>
-                        <rect x="270" y="133" width="9" height="4" rx="1"/><rect x="270" y="142" width="9" height="4" rx="1"/>
-                        <rect x="270" y="151" width="9" height="4" rx="1"/><rect x="270" y="160" width="9" height="4" rx="1"/>
-                      </g>
-                      <!-- Cables LDR a Arduino -->
-                      <path d="M375 200 Q340 230 279 160" stroke="#f39c12" stroke-width="2.2" fill="none"/>
-                      <path d="M425 200 Q450 250 279 142" stroke="#e74c3c" stroke-width="2.2" fill="none"/>
-                      <!-- LED rojo -->
-                      <ellipse cx="560" cy="220" rx="11" ry="14" fill="#ff5555" stroke="#cc0000" stroke-width="1.5"/>
-                      <ellipse cx="560" cy="217" rx="5" ry="5" fill="#ffaaaa" opacity="0.9"/>
-                      <circle cx="560" cy="215" r="22" fill="#ff3333" opacity="0.18"/>
-                      <line x1="554" y1="233" x2="554" y2="275" stroke="#ccc" stroke-width="2"/>
-                      <line x1="566" y1="233" x2="566" y2="275" stroke="#ccc" stroke-width="2"/>
-                      <!-- LED verde -->
-                      <ellipse cx="620" cy="220" rx="11" ry="14" fill="#44dd44" stroke="#228822" stroke-width="1.5"/>
-                      <ellipse cx="620" cy="217" rx="5" ry="5" fill="#aaffaa" opacity="0.9"/>
-                      <circle cx="620" cy="215" r="22" fill="#22cc22" opacity="0.18"/>
-                      <line x1="614" y1="233" x2="614" y2="275" stroke="#ccc" stroke-width="2"/>
-                      <line x1="626" y1="233" x2="626" y2="275" stroke="#ccc" stroke-width="2"/>
-                      <!-- LED azul -->
-                      <ellipse cx="680" cy="220" rx="11" ry="14" fill="#5599ff" stroke="#2244cc" stroke-width="1.5"/>
-                      <ellipse cx="680" cy="217" rx="5" ry="5" fill="#aaccff" opacity="0.9"/>
-                      <circle cx="680" cy="215" r="22" fill="#3366ff" opacity="0.18"/>
-                      <line x1="674" y1="233" x2="674" y2="275" stroke="#ccc" stroke-width="2"/>
-                      <line x1="686" y1="233" x2="686" y2="275" stroke="#ccc" stroke-width="2"/>
-                      <!-- Cables Arduino a LEDs -->
-                      <path d="M279 151 Q420 120 549 210" stroke="#ff5555" stroke-width="1.8" fill="none" stroke-dasharray="6,3"/>
-                      <path d="M279 160 Q430 135 609 210" stroke="#44dd44" stroke-width="1.8" fill="none" stroke-dasharray="6,3"/>
-                      <path d="M279 169 Q440 150 669 210" stroke="#5599ff" stroke-width="1.8" fill="none" stroke-dasharray="6,3"/>
-                      <!-- Labels -->
-                      <text x="400" y="35" text-anchor="middle" fill="#ffffff" font-size="15" font-family="sans-serif" font-weight="bold">Control de LEDs y Fotoresistencia</text>
-                      <text x="180" y="375" text-anchor="middle" fill="#6aff9a" font-size="10" font-family="monospace">Arduino UNO</text>
-                      <text x="400" y="375" text-anchor="middle" fill="#ffcc00" font-size="10" font-family="monospace">LDR (Fotoresistencia)</text>
-                      <text x="620" y="375" text-anchor="middle" fill="#aabbff" font-size="10" font-family="monospace">LEDs RGB</text>
-                    </svg>
-                </div>
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64" class="card-image">
                 <div class="card-content">
-                    <h3 class="card-title">Control de LEDs y Fotoresistencia</h3>
-                    <p class="card-description">
-                        Aprende a construir la maqueta final del proyecto: controla LEDs automáticamente 
-                        con una fotoresistencia (LDR), paso a paso con diagramas, código y explicación 
-                        completa del funcionamiento.
-                    </p>
-                    <a href="maqueta.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
-                 </div>
-             </div>
-    <div class="card">
-                <div class="card-image-container">
-                    <img src="https://mielectronicafacil.com/wp-content/uploads/2020/08/conexion-led-rgb-arduino-diagrama.jpg" 
-                         alt="Electronic switches and circuits" 
-                         class="card-image">
-                <div class="card-content">
-                    <h3 class="card-title">LEDRGB</h3>
-                    <p class="card-description">
-                       aprende a usar un led rgb con pushbottons y arduino uno
-                    </p>
-                    <a href="ledrgb.html" class="card-button">
-                        <span>Ver contenido</span>
-                    </a>
+                    <h3 class="card-title">Circuitos 2</h3>
+                    <p class="card-description">Con interruptores</p>
+                    <a href="circuito2.html" class="card-button">Ver</a>
                 </div>
             </div>
+
+            <!-- Card 5 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">Circuitos 3</h3>
+                    <p class="card-description">LED con potenciómetro</p>
+                    <a href="circuito3.html" class="card-button">Ver</a>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">Circuito 4</h3>
+                    <p class="card-description">Tres LEDs</p>
+                    <a href="circuito4.html" class="card-button">Ver</a>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">Fotoresistencia</h3>
+                    <p class="card-description">Control automático de LEDs</p>
+                    <a href="maqueta.html" class="card-button">Ver</a>
+                </div>
+            </div>
+
+            <!-- Card 8 (ARREGLADA) -->
+            <div class="card">
+                <img src="https://mielectronicafacil.com/wp-content/uploads/2020/08/conexion-led-rgb-arduino-diagrama.jpg" 
+                     class="card-image">
+
+                <div class="card-content">
+                    <h3 class="card-title">LED RGB</h3>
+                    <p class="card-description">
+                        Aprende a usar un LED RGB con botones y Arduino UNO.
+                    </p>
+                    <a href="ledrgb.html" class="card-button">Ver</a>
+                </div>
+            </div>
+
+        </div>
     </section>
+
 </body>
 </html>
